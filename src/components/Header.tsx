@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { data: session } = useSession();
 
   return (
-    <header className="bg-white text-gray-800 py-4">
+    <header className="bg-secondary text-gray-800 py-4 fixed top-0 left-0 right-0 z-50">
+      {" "}
       <div className="container mx-auto flex justify-between items-center flex-wrap">
         <div className="flex items-center">
           <Link href="/">
@@ -72,11 +75,17 @@ const Header = () => {
             </li>
             <li className="relative">
               <span className="hidden md:block absolute top-1/2 right-full transform -translate-y-1/2 h-6 w-1 bg-primary mx-1"></span>
-              <Link href="/perfil">
-                <span className="cursor-pointer hover:text-gray-600">
-                  Meu Perfil
-                </span>
-              </Link>
+              {session ? (
+                <Link href="/perfil">
+                  <span className="cursor-pointer hover:text-gray-600">
+                    Meu Perfil
+                  </span>
+                </Link>
+              ) : (
+                <Link href="/login">
+                  <span className="cursor-pointer text-primary">Acessar</span>
+                </Link>
+              )}
             </li>
           </ul>
         </nav>
