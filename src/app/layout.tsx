@@ -9,6 +9,9 @@ export const metadata = {
   title: "StartHub",
   description:
     "Plataforma para auxiliar na idealização e desenvolvimento de startups",
+  icons: {
+    icon: "/f.png", 
+  },
 };
 
 export default function RootLayout({
@@ -20,9 +23,7 @@ export default function RootLayout({
     <html lang="pt-br">
       <body className={inter.className}>
         <AuthProvider>
-          <main>
-            {children}
-          </main>
+          <main>{children}</main>
         </AuthProvider>
       </body>
     </html>
