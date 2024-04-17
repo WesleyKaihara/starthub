@@ -54,21 +54,21 @@ const Header = () => {
           <ul className="flex flex-col md:flex-row md:space-x-4 md:space-y-0">
             <li>
               <Link href="/destaque">
-                <span className="text-primary cursor-pointer hover:text-gray-600">
+                <span className="text-xl text-primary cursor-pointer transition duration-300  hover:text-gray-600">
                   Quero me destacar
                 </span>
               </Link>
             </li>
             <li>
               <Link href="/startups">
-                <span className="cursor-pointer hover:text-gray-600">
+                <span className="text-xl text-dark cursor-pointer hover:text-gray-600">
                   Startups
                 </span>
               </Link>
             </li>
             <li>
               <Link href="/noticias">
-                <span className="cursor-pointer hover:text-gray-600">
+                <span className="text-xl text-dark cursor-pointer hover:text-gray-600">
                   Notícias
                 </span>
               </Link>
@@ -77,13 +77,15 @@ const Header = () => {
               <span className="hidden md:block absolute top-1/2 right-full transform -translate-y-1/2 h-6 w-1 bg-primary mx-1"></span>
               {session ? (
                 <Link href="/perfil">
-                  <span className="cursor-pointer hover:text-gray-600">
+                  <span className="text-xl cursor-pointer hover:text-gray-600">
                     Meu Perfil
                   </span>
                 </Link>
               ) : (
                 <Link href="/login">
-                  <span className="cursor-pointer text-primary">Acessar</span>
+                  <span className="text-xl cursor-pointer text-primary">
+                    Acessar
+                  </span>
                 </Link>
               )}
             </li>

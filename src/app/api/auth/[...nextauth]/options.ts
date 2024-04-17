@@ -23,7 +23,7 @@ export const options: NextAuthOptions = {
         });
         const user = await res.json();
 
-        if (user) {
+        if (user.mensagem && user.mensagem != "Credenciais invalidas!!") {
           return user;
         } else {
           return null;

@@ -4,6 +4,7 @@ import { Projeto } from "@/types/Projeto";
 import { ProjectService } from "@/services/projectService";
 import { useEffect, useState, useCallback } from "react";
 import CardProjeto from "@/components/CardProjeto";
+import Title from '@/components/Title';
 
 export default function StartupsPage() {
   const [projetos, setProjetos] = useState<Projeto[]>([]);
@@ -26,7 +27,7 @@ export default function StartupsPage() {
   };
 
   return (
-    <section className="container mx-auto p-6 mt-12">      <h1>Startups</h1>
+    <section className="container mx-auto p-6 mt-12">      <Title>Em destaque</Title>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
         {projetos.length > 0 ? (
           projetos.map((projeto) => (

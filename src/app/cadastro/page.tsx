@@ -1,33 +1,30 @@
 "use client";
 
-import { signIn } from "next-auth/react";
-import Link from 'next/link';
+import Link from "next/link";
 import React, { useState, FormEvent, ChangeEvent } from "react";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 
-const LoginPage: React.FC = () => {
+const CadastroPage: React.FC = () => {
+  const [nome, setNome] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
 
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const result = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
-
-    if (result?.error) {
-      setErrorMessage(
-        "Credenciais inválidas. Por favor, verifique seu e-mail e senha."
-      );
-      console.error("Erro de autenticação:", result.error);
-      setPassword("");
-    } else {
-      window.location.href = "/perfil";
+    if (password !== confirmPassword) {
+      setErrorMessage("As senhas não coincidem.");
+      return;
     }
+
+  };
+
+  const handleNomeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setNome(e.target.value);
   };
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -38,8 +35,16 @@ const LoginPage: React.FC = () => {
     setPassword(e.target.value);
   };
 
+  const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   return (
@@ -63,8 +68,24 @@ const LoginPage: React.FC = () => {
               StartHub
             </Link>
           </div>
-          <h2 className="text-4xl font-bold mb-4">Entrar</h2>
-          <form onSubmit={handleLogin}>
+          <h2 className="text-4xl font-bold mb-4">Cadastro</h2>
+          <form onSubmit={handleSignUp}>
+            <div className="mb-4">
+              <label
+                htmlFor="nome"
+                className="block text-gray-700 font-bold mb-2"
+              >
+                Nome
+              </label>
+              <input
+                type="text"
+                id="nome"
+                placeholder="Informe seu nome"
+                className="w-full border border-gray-300 rounded px-3 py-2"
+                value={nome}
+                onChange={handleNomeChange}
+              />
+            </div>
             <div className="mb-4">
               <label
                 htmlFor="email"
@@ -75,10 +96,8 @@ const LoginPage: React.FC = () => {
               <input
                 type="email"
                 id="email"
-                placeholder="informe seu e-mail"
-                className={`w-full border ${
-                  errorMessage ? "border-red-500" : "border-gray-300"
-                } rounded px-3 py-2`}
+                placeholder="Informe seu e-mail"
+                className="w-full border border-gray-300 rounded px-3 py-2"
                 value={email}
                 onChange={handleEmailChange}
               />
@@ -94,10 +113,8 @@ const LoginPage: React.FC = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
-                  placeholder="informe sua senha"
-                  className={`w-full border ${
-                    errorMessage ? "border-red-500" : "border-gray-300"
-                  } rounded px-3 py-2 pr-10`}
+                  placeholder="Informe sua senha"
+                  className="w-full border border-gray-300 rounded px-3 py-2 pr-10"
                   value={password}
                   onChange={handlePasswordChange}
                 />
@@ -114,6 +131,35 @@ const LoginPage: React.FC = () => {
                 </button>
               </div>
             </div>
+            <div className="mb-4 relative">
+              <label
+                htmlFor="confirm-password"
+                className="block text-gray-700 font-bold mb-2"
+              >
+                Confirme a Senha
+              </label>
+              <div className="flex items-center">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirm-password"
+                  placeholder="Confirme sua senha"
+                  className="w-full border border-gray-300 rounded px-3 py-2 pr-10"
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange}
+                />
+                <button
+                  type="button"
+                  className="absolute right-0 pr-3 flex items-center focus:outline-none"
+                  onClick={toggleConfirmPasswordVisibility}
+                >
+                  {showConfirmPassword ? (
+                    <HiEyeOff className="h-6 w-6 text-gray-500" />
+                  ) : (
+                    <HiEye className="h-6 w-6 text-gray-500" />
+                  )}
+                </button>
+              </div>
+            </div>
             {errorMessage && (
               <p className="text-red-500 mb-4">{errorMessage}</p>
             )}
@@ -121,15 +167,15 @@ const LoginPage: React.FC = () => {
               type="submit"
               className="bg-primary transition duration-300 ease-in-out hover:filter hover:brightness-90 text-white font-bold py-2 px-4 rounded w-full mb-4"
             >
-              Acessar a plataforma
+              Cadastrar
             </button>
           </form>
           <button
             type="button"
             className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded w-full"
-            onClick={() => (window.location.href = "/cadastro")}
+            onClick={() => (window.location.href = "/login")}
           >
-            Cadastre-se
+            Já tenho uma conta
           </button>
         </div>
       </div>
@@ -137,4 +183,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default CadastroPage;
