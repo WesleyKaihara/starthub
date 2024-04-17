@@ -14,7 +14,7 @@ const Header = () => {
       <div className="container mx-auto flex justify-between items-center flex-wrap">
         <div className="flex items-center">
           <Link href="/">
-            <span className="text-2xl font-bold cursor-pointer text-primary">
+            <span className="text-4xl font-bold cursor-pointer text-primary">
               StartHub
             </span>
           </Link>
