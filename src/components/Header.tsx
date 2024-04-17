@@ -3,13 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { IoCloseOutline, IoMenu } from "react-icons/io5";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { data: session } = useSession();
 
   return (
-    <header className="bg-secondary text-gray-800 py-4 fixed top-0 left-0 right-0 z-50">
+    <header className="bg-secondary text-gray-800 py-4 fixed top-0 left-0 right-0 z-50 px-4">
       {" "}
       <div className="container mx-auto flex justify-between items-center flex-wrap">
         <div className="flex items-center">
@@ -25,25 +26,7 @@ const Header = () => {
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? "Fechar Menu" : "Abrir Menu"}
           >
-            {menuOpen ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 fill-current"
-                viewBox="0 0 24 24"
-              >
-                <path fill="none" d="M0 0h24v24H0z" />
-                <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 fill-current"
-                viewBox="0 0 24 24"
-              >
-                <path fill="none" d="M0 0h24v24H0z" />
-                <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" />
-              </svg>
-            )}
+            {menuOpen ? <IoCloseOutline size={40} /> : <IoMenu size={40} />}
           </button>
         </div>
         <nav
@@ -51,10 +34,10 @@ const Header = () => {
             menuOpen ? "block" : "hidden"
           } mt-4 md:mt-0 md:ml-4 w-full md:w-auto`}
         >
-          <ul className="flex flex-col md:flex-row md:space-x-4 md:space-y-0">
+          <ul className="flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
             <li>
               <Link href="/destaque">
-                <span className="text-xl text-primary cursor-pointer transition duration-300  hover:text-gray-600">
+                <span className="text-xl text-primary cursor-pointer transition duration-300 hover:text-gray-600">
                   Quero me destacar
                 </span>
               </Link>
