@@ -1,9 +1,11 @@
-'use client'
+"use client";
 
-export default function DestaquePage() {
-    return (
-        <section className="flex flex-col gap-6">
-            Destaque
-        </section>
-    )
+import Header from "@/components/Header";
+
+export default async function Destaque() {
+  return (
+    <>
+      <h1 className="text-5xl">Destaque</h1>
+    </>
+  );
 }

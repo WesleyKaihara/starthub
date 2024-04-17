@@ -26,8 +26,7 @@ export default function StartupsPage() {
   };
 
   return (
-    <section className="container flex flex-col gap-6">
-      <h1>Startups</h1>
+    <section className="container mx-auto p-6 mt-12">      <h1>Startups</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
         {projetos.length > 0 ? (
           projetos.map((projeto) => (
@@ -36,7 +35,7 @@ export default function StartupsPage() {
               imageSrc="https://via.placeholder.com/300"
               title={projeto.name}
               description={projeto.description}
-              buttonText="Clique aqui"
+              buttonText="Mais detalhes"
               buttonOnClick={() => handleButtonClick(projeto.id)}
             />
           ))

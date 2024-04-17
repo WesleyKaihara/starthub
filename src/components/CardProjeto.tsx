@@ -22,9 +22,9 @@ const CardProjeto: React.FC<CardProps> = ({
         <div className="font-bold text-xl mb-2">{title}</div>
         <p className="text-gray-700 text-base">{description}</p>
       </div>
-      <div className="px-6 pb-4">
+      <div className="px-6 py-3">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full"
+          className="bg-primary text-white font-bold py-2 px-4 rounded-md w-full transition duration-300 ease-in-out hover:filter hover:brightness-90"
           onClick={buttonOnClick}
         >
           {buttonText}

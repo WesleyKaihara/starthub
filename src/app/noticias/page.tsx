@@ -1,9 +1,7 @@
-'use client'
+"use client";
 
 export default function NoticiasPage() {
-    return (
-        <section className="flex flex-col gap-6">
-            Noticias
-        </section>
-    )
+  <section className="container mx-auto mt-24">
+    <h1 className="text-5xl">Noticias</h1>
+  </section>;
 }
