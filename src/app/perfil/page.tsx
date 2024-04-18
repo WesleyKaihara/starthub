@@ -11,8 +11,6 @@ export default function PerfilPage() {
     },
   });
 
-  console.log(session)
-
   const handleLogout = async () => {
     await signOut({ redirect: false });
     window.location.href = "/";
@@ -20,7 +18,7 @@ export default function PerfilPage() {
 
   return (
     <section className="container mx-auto mt-24">
-      <h1 className="text-5xl">Perfil</h1>
+      <h1 className="text-5xl">Perfil - {session?.user?.name}</h1>
       <button
         onClick={handleLogout}
         className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"

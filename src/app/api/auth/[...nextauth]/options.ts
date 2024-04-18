@@ -1,5 +1,6 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import jwt from "jsonwebtoken";
 
 export const options: NextAuthOptions = {
   providers: [
@@ -21,9 +22,12 @@ export const options: NextAuthOptions = {
             password: credentials?.password,
           }),
         });
-        const user = await res.json();
+        const tokens = await res.json();
 
-        if (user.access_token) {
+        const user = jwt.decode(tokens.access_token);
+
+        if (user) {
+          user.name = user.username;
           return user;
         } else {
           return null;

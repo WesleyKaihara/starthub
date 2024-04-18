@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 const API_HOST = process.env.NEXT_PUBLIC_STARTHUB_API;
 
@@ -6,7 +6,7 @@ export type CadastrarUsuarioBody = {
   name: string;
   email: string;
   password: string;
-}
+};
 
 export class UserService {
   static async cadastrarUsuario(input: CadastrarUsuarioBody) {
