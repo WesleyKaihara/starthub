@@ -7,7 +7,7 @@ export const options: NextAuthOptions = {
       name: "Credentials",
 
       credentials: {
-        username: { label: "Username", type: "text" },
+        email: { label: "E-mail", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
@@ -17,13 +17,13 @@ export const options: NextAuthOptions = {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            username: credentials?.username,
+            email: credentials?.email,
             password: credentials?.password,
           }),
         });
         const user = await res.json();
 
-        if (user.mensagem && user.mensagem != "Credenciais invalidas!!") {
+        if (user.access_token) {
           return user;
         } else {
           return null;

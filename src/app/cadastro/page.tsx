@@ -1,5 +1,7 @@
 "use client";
 
+import { UserService } from "@/services/UserService";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import React, { useState, FormEvent, ChangeEvent } from "react";
 import { HiEye, HiEyeOff } from "react-icons/hi";
@@ -21,6 +23,28 @@ const CadastroPage: React.FC = () => {
       return;
     }
 
+    try {
+      await UserService.cadastrarUsuario({
+        name: nome,
+        email,
+        password,
+      });
+
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
+
+      if (result?.error) {
+        throw new Error("Ocorreu um problema com o servidor. Tente novamente");
+        
+      } else {
+        window.location.href = "/perfil";
+      }
+    } catch (error) {
+      setErrorMessage("Ocorreu um erro ao cadastrar usuário. Tente novamente");
+    }
   };
 
   const handleNomeChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +99,7 @@ const CadastroPage: React.FC = () => {
                 htmlFor="nome"
                 className="block text-gray-700 font-bold mb-2"
               >
-                Nome
+                Nome Completo
               </label>
               <input
                 type="text"

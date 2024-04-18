@@ -1,16 +1,14 @@
-"use client"
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
 
 const Formulario: React.FC = () => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
   const [image, setImage] = useState<File | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Aqui você pode enviar os dados do formulário para onde desejar
-    console.log({ name, description, isPrivate, image });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,11 +52,7 @@ const Formulario: React.FC = () => {
         <div>
           <label>
             Imagem:
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
+            <input type="file" accept="image/*" onChange={handleImageChange} />
           </label>
         </div>
         <button type="submit">Enviar</button>
