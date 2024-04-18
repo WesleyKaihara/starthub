@@ -7,7 +7,7 @@ export default function PerfilPage() {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
-      redirect("/api/auth/signin?callbackUrl=/client");
+      redirect("/login?callbackUrl=/perfil");
     },
   });
 

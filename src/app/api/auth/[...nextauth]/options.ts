@@ -2,11 +2,16 @@ import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import jwt from "jsonwebtoken";
 
+type User = {
+  id: string;
+  name: string;
+  email: string;
+};
+
 export const options: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
-
       credentials: {
         email: { label: "E-mail", type: "email" },
         password: { label: "Password", type: "password" },
@@ -24,10 +29,18 @@ export const options: NextAuthOptions = {
         });
         const tokens = await res.json();
 
-        const user = jwt.decode(tokens.access_token);
+        const decodedToken = jwt.decode(tokens.access_token) as {
+          username: string;
+          sub: string;
+          email: string;
+        } | null;
 
-        if (user) {
-          user.name = user.username;
+        if (decodedToken) {
+          const user: User = {
+            id: decodedToken.sub,
+            name: decodedToken.username,
+            email: decodedToken.email,
+          };
           return user;
         } else {
           return null;

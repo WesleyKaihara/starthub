@@ -1,5 +1,6 @@
 "use client";
 
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
 export default async function Home() {
@@ -13,6 +14,7 @@ export default async function Home() {
         <p>Benefícios</p>
         <p>Sobre</p>
       </section>
+      <Footer />
     </>
   );
 }
