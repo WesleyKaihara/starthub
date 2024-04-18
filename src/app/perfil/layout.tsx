@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import "../../styles/globals.css";
+import Footer from '@/components/Footer';
 
 export const metadata = {
   title: "StartHub - Meu Perfil",
@@ -16,6 +17,7 @@ export default function RootLayout({
     <>
       <Header />
       <section className="container mx-auto mt-24">{children}</section>
+      <Footer />
     </>
   );
 }
