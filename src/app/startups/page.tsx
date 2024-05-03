@@ -42,7 +42,7 @@ export default function StartupsPage() {
             projetos.map((projeto) => (
               <CardProjeto
                 key={projeto.id}
-                imageSrc="https://via.placeholder.com/300"
+                imageSrc={projeto.image}
                 title={projeto.name}
                 description={projeto.description}
                 buttonText="Mais detalhes"

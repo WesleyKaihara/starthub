@@ -10,7 +10,7 @@ export const metadata = {
   description:
     "Plataforma para auxiliar na idealização e desenvolvimento de startups",
   icons: {
-    icon: "/f.png", 
+    icon: "/f.png",
   },
 };
 
