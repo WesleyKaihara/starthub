@@ -1,7 +1,7 @@
 "use client";
 
 import { Projeto } from "@/types/Projeto";
-import { ProjectService } from "@/services/projectService";
+import { ProjectService } from "@/services/ProjectService";
 import { useEffect, useState, useCallback } from "react";
 import CardProjeto from "@/components/CardProjeto";
 import Title from "@/components/Title";

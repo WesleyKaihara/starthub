@@ -1,7 +1,7 @@
 "use client";
 
 import Title from "@/components/Title";
-import { ProjectService } from "@/services/projectService";
+import { ProjectService } from "@/services/ProjectService";
 import { ReactNode, useEffect, useCallback, useState } from "react";
 
 type Params = {

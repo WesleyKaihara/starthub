@@ -2,19 +2,24 @@
 
 import Banner from "@/components/Banner";
 import Title from "@/components/Title";
+import { ProjectService } from "@/services/ProjectService";
 import React, { ChangeEvent, FormEvent, useState } from "react";
 
 interface StartupData {
   name: string;
   description: string;
-  image: string;
+  image: File | null;
+  previewImage: string | null;
+  private: boolean;
 }
 
 const StartupForm: React.FC = () => {
   const [startupData, setStartupData] = useState<StartupData>({
     name: "",
     description: "",
-    image: "",
+    image: null,
+    previewImage: null,
+    private: false,
   });
 
   const handleInputChange = (
@@ -34,21 +39,42 @@ const StartupForm: React.FC = () => {
       reader.onloadend = () => {
         setStartupData({
           ...startupData,
-          image: reader.result as string,
+          image: file,
+          previewImage: reader.result as string,
         });
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Dados da startup:", startupData);
-    setStartupData({
-      name: "",
-      description: "",
-      image: "",
-    });
+
+    if (!startupData.image) {
+      alert("Por favor, selecione uma imagem");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("name", startupData.name);
+    formData.append("description", startupData.description);
+    formData.append("file", startupData.image);
+    formData.append("private", "false");
+
+    try {
+      const response = await ProjectService.cadastrarProjeto(formData);
+      console.log("Resposta da API:", response.data);
+
+      setStartupData({
+        name: "",
+        description: "",
+        image: null,
+        previewImage: null,
+        private: false,
+      });
+    } catch (error) {
+      console.error("Erro ao enviar os dados:", error);
+    }
   };
 
   return (
@@ -121,10 +147,11 @@ const StartupForm: React.FC = () => {
               Selecione uma imagem para a sua startup
             </span>
           </div>
-          {startupData.image && (
+
+          {startupData.previewImage && (
             <div className="mb-4">
               <img
-                src={startupData.image}
+                src={startupData.previewImage}
                 alt="Imagem da Startup"
                 className="w-full h-auto"
               />
