@@ -10,4 +10,8 @@ export class DiscussionService {
   static buscarInteracoesDiscussao(discussionId: number) {
     return axios.get(`${API_HOST}/interaction/${discussionId}`);
   }
+
+  static buscarDiscussoesProjeto(projectId: number) {
+    return axios.get(`${API_HOST}/discussion/project/${projectId}`);
+  }
 }
