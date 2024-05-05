@@ -16,7 +16,7 @@ const IconWithText: React.FC<IconWithTextProps> = ({
   text,
 }) => {
   return (
-    <div className="text-center">
+    <div className="text-center mt-4">
       <div
         className="inline-block p-8 border-8 rounded-full border-dotted"
         style={{ borderColor: borderColor }}

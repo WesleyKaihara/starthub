@@ -1,13 +1,14 @@
 "use client";
 
+import FullWidthContainer from "@/components/FullWidthContainer";
 import ImageContent from "@/components/ImageContent";
 import ServiceCard from "@/components/ServiceCard";
 import TitleWithSubtitle from "@/components/Title/TitleWithSubtitle";
 
 export default async function Destaque() {
   return (
-    <main className="px-4">
-      <section className="flex justify-center">
+    <main>
+      <section className="flex justify-center mb-16 px-4">
         <div className="container mx-20">
           <ImageContent imageUrl="startup_banner.jpg">
             <TitleWithSubtitle
@@ -17,7 +18,11 @@ export default async function Destaque() {
           </ImageContent>
         </div>
       </section>
-      <section className="mt-20">
+      <FullWidthContainer
+        title="DICA: Esteja Aberto ao Feedback"
+        description="Feedback é uma ferramenta valiosa para o crescimento de sua startup. Esteja aberto a receber críticas construtivas de clientes, mentores, investidores e outros stakeholders. Use esse feedback para iterar e melhorar continuamente seu produto ou serviço, adaptando-se às necessidades do mercado."
+      />
+      <section className="mt-20 px-4">
         <div className="flex flex-col justify-center items-center">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-4xl mb-4">
             Serviços

@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import "../../styles/globals.css";
-import Footer from '@/components/Footer';
+import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "StartHub - Destaques",
@@ -16,7 +16,7 @@ export default function DestaqueLayout({
   return (
     <>
       <Header />
-      <section className="container mx-auto mt-24">{children}</section>
+      <main className='mt-24'>{children}</main>
       <Footer />
     </>
   );
