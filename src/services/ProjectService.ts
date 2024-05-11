@@ -12,6 +12,10 @@ export class ProjectService {
     return axios.get(`${API_HOST}/project/${projetoId}`);
   }
 
+  static buscarProjetosUsuario(usuarioId: number) {
+    return axios.get(`${API_HOST}/project/user/${usuarioId}`);
+  }
+
   static async cadastrarProjeto(projeto: FormData) {
     console.log(projeto)
     return await axios.post(`${API_HOST}/project`, projeto, {

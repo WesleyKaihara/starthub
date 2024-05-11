@@ -61,7 +61,7 @@ export default function Page({ params }: PageProps): ReactNode {
               <Title>Discussões</Title>
               <ul>
                 {discussions.map((discussion: any) => (
-                  <li key={discussion.id}>
+                  <li className='mt-2' key={discussion.id}>
                     <Link href={`/discussao/${discussion.id}`}>
                       <span className="block border rounded-lg py-2 px-4 transition duration-300 ease-in-out hover:bg-gray-200 hover:text-gray-900">
                         <h3 className="text-lg font-semibold mb-2">

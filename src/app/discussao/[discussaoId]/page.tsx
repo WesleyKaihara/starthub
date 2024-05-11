@@ -41,19 +41,6 @@ export default function Page({ params }: PageProps): ReactNode {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      // Enviar a nova interação para o servidor
-      await DiscussionService.adicionarInteracaoDiscussao(
-        +params.discussaoId,
-        newInteraction
-      );
-      // Recarregar as interações
-      fetchInteractions();
-      // Limpar o campo de texto
-      setNewInteraction("");
-    } catch (error) {
-      console.error("Erro ao adicionar a interação:", error);
-    }
   };
 
   useEffect(() => {

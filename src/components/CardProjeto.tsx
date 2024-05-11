@@ -3,7 +3,7 @@ import React from "react";
 interface CardProps {
   imageSrc: string;
   title: string;
-  description: string;
+  description?: string;
   buttonText: string;
   buttonOnClick: () => void;
 }

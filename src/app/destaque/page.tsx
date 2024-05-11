@@ -44,11 +44,13 @@ export default async function Destaque() {
                 "Economia de Tempo",
                 "Maior Assertividade",
               ]}
+              serviceName='sugestao-ferramentas'
             />
             <ServiceCard
               title="Geração de Nomes"
               description="Receba recomendações especializadas para impulsionar o desenvolvimento, marketing, finanças e muito mais. Economize tempo e recursos, concentrando-se nas soluções certas para o crescimento do seu negócio."
               features={["Maior relevância", "Criatividade"]}
+              serviceName="gerar-nomes"
             />
           </div>
         </div>

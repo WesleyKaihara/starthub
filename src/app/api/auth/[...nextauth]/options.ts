@@ -51,4 +51,10 @@ export const options: NextAuthOptions = {
   pages: {
     signIn: "/login",
   },
+  callbacks: {
+    async session({ session, user, token }) {
+      session.user.id = Number(token.sub);
+      return session;
+    },
+  },
 };

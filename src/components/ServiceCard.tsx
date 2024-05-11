@@ -1,16 +1,18 @@
 "use client";
 
+import { redirect } from "next/navigation";
 import React from "react";
 
 interface CardProps {
   title: string;
+  serviceName: string;
   description: string;
   features?: string[];
 }
 
-const ServiceCard: React.FC<CardProps> = ({ title, description, features }) => {
+const ServiceCard: React.FC<CardProps> = ({ title, description, features, serviceName }) => {
   const limitedFeatures = features ? features.slice(0, 3) : [];
-  
+
   return (
     <div className="mb-8" style={{ height: "400px" }}>
       <div
@@ -36,13 +38,18 @@ const ServiceCard: React.FC<CardProps> = ({ title, description, features }) => {
             <div className="my-2">
               <ul className="list-disc pl-5">
                 {limitedFeatures.map((feature, index) => (
-                  <li className="mt-2" key={index}>{feature}</li>
+                  <li className="mt-2" key={index}>
+                    {feature}
+                  </li>
                 ))}
               </ul>
             </div>
           )}
           <p className="text-justify">{description}</p>
-          <button className="bg-primary text-white py-2 px-12 rounded-full absolute bottom-4 left-4">
+          <button
+            onClick={() => (window.location.href = `/servicos/${serviceName}`)}
+            className="bg-primary text-white py-2 px-12 rounded-full absolute bottom-4 left-4"
+          >
             Adquirir
           </button>
         </div>
