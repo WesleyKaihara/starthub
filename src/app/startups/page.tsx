@@ -33,10 +33,10 @@ export default function StartupsPage() {
         imageUrl="/startup_banner.jpg"
         link="/startups/cadastro"
         alt="Cadastrar nova Startup"
-        target='_self'
+        target="_self"
       />
       <section className="my-10">
-        <Title>Em destaque</Title>
+        <Title>Startups</Title>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
           {projetos.length > 0 ? (
             projetos.map((projeto) => (
@@ -53,6 +53,9 @@ export default function StartupsPage() {
             <p>Nenhum projeto encontrado.</p>
           )}
         </div>
+      </section>
+      <section>
+        <Title>Discussões</Title>
       </section>
     </div>
   );

@@ -14,4 +14,10 @@ export class DiscussionService {
   static buscarDiscussoesProjeto(projectId: number) {
     return axios.get(`${API_HOST}/discussion/project/${projectId}`);
   }
+
+  static iniciarDiscussao(title: string, context: string, projectId: number) {
+    return axios.post(`${API_HOST}/discussion`, {
+      title, context, projectId
+    });
+  }
 }
