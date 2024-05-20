@@ -4,7 +4,7 @@ import FullScreenBanner from "@/components/Banners/HomeBanner";
 import Footer from "@/components/Footer";
 import FullWidthContainer from "@/components/FullWidthContainer";
 import Header from "@/components/Header";
-import HighlightedNumber from '@/components/HighlightedNumber';
+import HighlightedNumber from "@/components/HighlightedNumber";
 import IconWithText from "@/components/Solutions/SolutionItem";
 import TitleWithSubtitle from "@/components/Title/TitleWithSubtitle";
 
@@ -65,15 +65,15 @@ export default async function Home() {
           </div>
         </div>
       </section>
-      <HighlightedNumber
-        title="Estatísticas (CB Insights)"
-        description="das Startups falham"
-        targetNumber={90} 
-      />
 
       <FullWidthContainer
         title="DICA: Aprenda com o Fracasso"
         description="O fracasso faz parte do processo de aprendizado. Em vez de desanimar, use cada falha como uma oportunidade de aprendizado para se tornar mais forte e mais preparado para os desafios futuros."
+      />
+      <HighlightedNumber
+        title="Estatísticas (CB Insights)"
+        description="das Startups falham"
+        targetNumber={90}
       />
       <Footer />
     </>

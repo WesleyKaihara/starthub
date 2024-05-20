@@ -24,9 +24,8 @@ export default function Page({ params }: PageProps): ReactNode {
 
   const fetchProjeto = useCallback(async () => {
     try {
-      const { data } = await ProjectService.buscarProjetoPorId(
-        +params.projetoId
-      );
+      const { data } = await ProjectService.buscarProjetoPorId(+params.projetoId);
+      console.log(data);
       setProjeto(data);
     } catch (error) {
       console.error("Erro ao buscar o projeto:", error);
@@ -35,9 +34,7 @@ export default function Page({ params }: PageProps): ReactNode {
 
   const fetchDiscussions = useCallback(async () => {
     try {
-      const { data } = await DiscussionService.buscarDiscussoesProjeto(
-        +params.projetoId
-      );
+      const { data } = await DiscussionService.buscarDiscussoesProjeto(+params.projetoId);
       setDiscussions(data);
     } catch (error) {
       console.error("Erro ao buscar discussões para o projeto:", error);
@@ -64,9 +61,7 @@ export default function Page({ params }: PageProps): ReactNode {
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -74,17 +69,19 @@ export default function Page({ params }: PageProps): ReactNode {
     <main className="px-4">
       {projeto ? (
         <div>
-          <Title>{projeto.name}</Title>
-          <p>{projeto.description}</p>
+          <div className="flex flex-col md:flex-row items-center md:items-start">
+            <img src={projeto.image} alt={projeto.name} className="w-32 h-32 md:w-16 md:h-16 mb-4 md:mb-0 rounded-full" />
+            <div className="md:ml-4">
+              <Title>{projeto.name}</Title>
+              <p>{projeto.description}</p>
+            </div>
+          </div>
 
           <section className="mt-10">
             <Title>Discussões</Title>
             <form onSubmit={handleSubmit} className="mt-6">
               <div className="mb-4">
-                <label
-                  htmlFor="title"
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                >
+                <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
                   Título:
                 </label>
                 <input
@@ -98,10 +95,7 @@ export default function Page({ params }: PageProps): ReactNode {
                 />
               </div>
               <div className="mb-4">
-                <label
-                  htmlFor="context"
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                >
+                <label htmlFor="context" className="block text-gray-700 text-sm font-bold mb-2">
                   Contexto:
                 </label>
                 <textarea
@@ -115,10 +109,7 @@ export default function Page({ params }: PageProps): ReactNode {
                 ></textarea>
               </div>
               <div>
-                <button
-                  type="submit"
-                  className="bg-primary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
+                <button type="submit" className="bg-primary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                   Iniciar Discussão
                 </button>
               </div>
@@ -131,9 +122,7 @@ export default function Page({ params }: PageProps): ReactNode {
                     <li className="mt-4" key={discussion.id}>
                       <Link href={`/discussao/${discussion.id}`}>
                         <div className="border rounded-md p-4 transition duration-300 ease-in-out hover:bg-gray-200 hover:text-gray-900 cursor-pointer">
-                          <h3 className="text-lg font-semibold">
-                            {discussion.title}
-                          </h3>
+                          <h3 className="text-lg font-semibold">{discussion.title}</h3>
                           <p>{discussion.context}</p>
                         </div>
                       </Link>

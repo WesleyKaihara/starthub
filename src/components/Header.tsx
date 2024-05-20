@@ -43,25 +43,25 @@ const Header = () => {
               </Link>
             </li>
             <li>
+              <Link href="/estudos">
+                <span className="text-xl text-dark cursor-pointer">
+                  Estudos
+                </span>
+              </Link>
+            </li>
+            <li>
               <Link href="/startups">
                 <span className="text-xl text-dark cursor-pointer">
                   Startups
                 </span>
               </Link>
             </li>
-            <li>
-              <Link href="/noticias">
-                <span className="text-xl text-dark cursor-pointer">
-                  Notícias
-                </span>
-              </Link>
-            </li>
             <li className="relative">
               <span className="hidden md:block absolute top-1/2 right-full transform -translate-y-1/2 h-6 w-1 bg-primary mx-1"></span>
               {session ? (
-                <Link href="/perfil">
+                <Link href="/startups">
                   <span className="lg:mx-1 text-xl cursor-pointer text-dark">
-                    Meu Perfil
+                    Sair
                   </span>
                 </Link>
               ) : (

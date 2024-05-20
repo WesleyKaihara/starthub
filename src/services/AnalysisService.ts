@@ -10,4 +10,11 @@ export class AnalysisService {
     });
     return nomes;
   }
+
+  static async listarTopicosEstudo(descricaoProjeto: string) {
+    const topicos = await axios.post(`${API_HOST}/analysis/importance-data`, {
+      projectDescription: descricaoProjeto,
+    });
+    return topicos;
+  }
 }

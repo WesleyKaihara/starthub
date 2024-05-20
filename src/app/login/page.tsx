@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
       console.error("Erro de autenticação:", result.error);
       setPassword("");
     } else {
-      window.location.href = "/perfil";
+      window.location.href = "/startups";
     }
   };
 

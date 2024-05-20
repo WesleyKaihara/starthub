@@ -47,7 +47,7 @@ const ServiceCard: React.FC<CardProps> = ({ title, description, features, servic
           )}
           <p className="text-justify">{description}</p>
           <button
-            onClick={() => (window.location.href = `/servicos/${serviceName}`)}
+            onClick={() => (window.location.href = `/ferramentas/${serviceName}`)}
             className="bg-primary text-white py-2 px-12 rounded-full absolute bottom-4 left-4"
           >
             Adquirir

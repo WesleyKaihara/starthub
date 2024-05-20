@@ -22,7 +22,7 @@ export default function Page(): ReactNode {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
-      redirect("/login?callbackUrl=/servicos/gerar-nomes");
+      redirect("/login?callbackUrl=/ferramentas/gerar-nomes");
     },
   });
 

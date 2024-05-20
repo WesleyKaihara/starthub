@@ -40,7 +40,7 @@ const CadastroPage: React.FC = () => {
         throw new Error("Ocorreu um problema com o servidor. Tente novamente");
         
       } else {
-        window.location.href = "/perfil";
+        window.location.href = "/";
       }
     } catch (error) {
       setErrorMessage("Ocorreu um erro ao cadastrar usuário. Tente novamente");

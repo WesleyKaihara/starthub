@@ -8,16 +8,6 @@ import TitleWithSubtitle from "@/components/Title/TitleWithSubtitle";
 export default async function Destaque() {
   return (
     <main>
-      <section className="flex justify-center mb-16 px-4">
-        <div className="container mx-20">
-          <ImageContent imageUrl="startup_banner.jpg">
-            <TitleWithSubtitle
-              subtitle="NOSSOS SERVIÇOS"
-              title="Atividades e Conhecimentos"
-            />
-          </ImageContent>
-        </div>
-      </section>
       <FullWidthContainer
         title="DICA: Esteja Aberto ao Feedback"
         description="Feedback é uma ferramenta valiosa para o crescimento de sua startup. Esteja aberto a receber críticas construtivas de clientes, mentores, investidores e outros stakeholders. Use esse feedback para iterar e melhorar continuamente seu produto ou serviço, adaptando-se às necessidades do mercado."
@@ -37,14 +27,14 @@ export default async function Destaque() {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-screen-lg">
             <ServiceCard
-              title="Sugestões de Ferramentas"
-              description="Receba recomendações especializadas para impulsionar o desenvolvimento, marketing, finanças e muito mais. Economize tempo e recursos, concentrando-se nas soluções certas para o crescimento do seu negócio."
+              title="Dados relevantes para a ideia"
+              description="Receba recomendações de tópicos que podem ser importantes para o sucesso do seu negócio, com a reflexão sobre os pontos apresentados sua visão sobre a empresa pode mudar"
               features={[
                 "Inteligência Artificial",
-                "Economia de Tempo",
                 "Maior Assertividade",
+                "Reflexão"
               ]}
-              serviceName='sugestao-ferramentas'
+              serviceName='dados-relevantes'
             />
             <ServiceCard
               title="Geração de Nomes"

@@ -6,19 +6,20 @@ const Footer = () => {
     {
       id: 1,
       question: "O que é a StartHub?",
-      answer: "Resposta",
+      answer:
+        "A StartHub é uma plataforma que visa auxiliar empreendedores durante o desenvolvimento de suas ideias, principalmente as etapas iniciais do projeto como a etapa de idealização e a validação da ideia",
       isOpen: false,
     },
     {
       id: 2,
       question: "Como a StartHub pode te ajudar?",
-      answer: "Resposta",
+      answer: "A StartHub possui algum serviços que utilizam de inteligencia artificial para realizar análise e criar feedbacks sobre sua ideia.",
       isOpen: false,
     },
     {
       id: 3,
       question: "Tem algum pré-requisito para utilizar a Plataforma?",
-      answer: "Resposta",
+      answer: "A StartHub somente deseja que o empreendedor tenha interesse em evoluir sua ideia e consigo apresentar de forma clara sobre o seu projeto",
       isOpen: false,
     },
   ]);
@@ -29,6 +30,16 @@ const Footer = () => {
         item.id === id ? { ...item, isOpen: !item.isOpen } : item
       )
     );
+  };
+
+  const breakText = (text, maxLength) => {
+    const parts = [];
+    while (text.length > maxLength) {
+      parts.push(text.slice(0, maxLength));
+      text = text.slice(maxLength);
+    }
+    parts.push(text);
+    return parts;
   };
 
   return (
@@ -43,14 +54,16 @@ const Footer = () => {
             <div
               key={accordion.id}
               className={`w-full text-dark mb-6 pb-4 bg-white border border-gray-300 shadow-lg rounded-md p-6 h-auto transition-all duration-300 overflow-hidden`}
-              style={{ minHeight: accordion.isOpen ? "unset" : "5rem" }}
+              style={{ width: accordion.isOpen ? "100%" : "auto" }}
               onClick={() => toggleAccordion(accordion.id)}
             >
               <button className="text-xl font-bold cursor-pointer focus:outline-none mb-2">
                 {accordion.question}
               </button>
-              <div className={accordion.isOpen ? "block" : "hidden"}>
-                {accordion.answer}
+              <div className={accordion.isOpen ? "block text-justify" : "hidden"}>
+                {breakText(accordion.answer, 90).map((part, index) => (
+                  <div key={index}>{part}</div>
+                ))}
               </div>
             </div>
           ))}

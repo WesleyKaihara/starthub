@@ -3,7 +3,7 @@ import "../../styles/globals.css";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "StartHub - Serviços",
+  title: "StartHub - Ferramentas",
   description:
     "Plataforma para auxiliar na idealização e desenvolvimento de startups",
 };

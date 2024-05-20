@@ -54,9 +54,6 @@ export default function StartupsPage() {
           )}
         </div>
       </section>
-      <section>
-        <Title>Discussões</Title>
-      </section>
     </div>
   );
 }

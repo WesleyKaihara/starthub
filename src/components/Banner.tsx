@@ -1,13 +1,13 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React from "react";
+import { useEffect, useState } from "react";
 
-type TargetOptions = '_self' | '_blank' | '_parent' | '_top';
+type TargetOptions = "_self" | "_blank" | "_parent" | "_top";
 
 interface BannerProps {
   imageUrl: string;
-  link: string;
+  link?: string;
   alt: string;
-  target: TargetOptions;
+  target?: TargetOptions;
 }
 
 const Banner: React.FC<BannerProps> = ({ imageUrl, link, alt, target }) => {
@@ -21,15 +21,25 @@ const Banner: React.FC<BannerProps> = ({ imageUrl, link, alt, target }) => {
     };
 
     setHeight();
-    window.addEventListener('resize', setHeight);
+    window.addEventListener("resize", setHeight);
     return () => {
-      window.removeEventListener('resize', setHeight);
+      window.removeEventListener("resize", setHeight);
     };
   }, []);
 
   return (
-    <a href={link} target={target} rel="noopener noreferrer" style={{ width: '100%', height: bannerHeight, display: 'block' }}>
-      <img src={imageUrl} alt={alt} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+    <a
+      className="mb-12"
+      href={link}
+      target={target}
+      rel="noopener noreferrer"
+      style={{ width: "100%", height: bannerHeight, display: "block" }}
+    >
+      <img
+        src={imageUrl}
+        alt={alt}
+        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+      />
     </a>
   );
 };
