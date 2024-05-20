@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .hover-scale-101:hover {
+    transform: scale(1.01);
+  }
+}
+
 :root {
   --foreground-rgb: 51, 51, 51;
   --background-color: 249,249,249

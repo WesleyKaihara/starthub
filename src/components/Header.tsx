@@ -43,9 +43,9 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link href="/estudos">
+              <Link href="/forum">
                 <span className="text-xl text-dark cursor-pointer">
-                  Estudos
+                  Fórum
                 </span>
               </Link>
             </li>

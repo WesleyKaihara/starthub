@@ -20,4 +20,8 @@ export class DiscussionService {
       title, context, projectId
     });
   }
+
+  static listarDiscussoes() {
+    return axios.get(`${API_HOST}/discussion`);
+  }
 }
