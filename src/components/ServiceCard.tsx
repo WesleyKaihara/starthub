@@ -12,7 +12,7 @@ interface CardProps {
 
 const ServiceCard: React.FC<CardProps> = ({ title, description, features, serviceName }) => {
   const limitedFeatures = features ? features.slice(0, 3) : [];
-
+  
   return (
     <div className="mb-8" style={{ height: "400px" }}>
       <div

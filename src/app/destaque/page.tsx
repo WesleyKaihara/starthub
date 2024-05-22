@@ -1,9 +1,37 @@
 "use client";
 
+import CardService from "@/components/Cards/CardService";
 import FullWidthContainer from "@/components/FullWidthContainer";
-import ImageContent from "@/components/ImageContent";
 import ServiceCard from "@/components/ServiceCard";
-import TitleWithSubtitle from "@/components/Title/TitleWithSubtitle";
+import Title from "@/components/Title";
+
+const cardsData = [
+  {
+    imageUrl: "/logo-starthub.png",
+    title: "Título do Card 1",
+    description: "Receba recomendações de tópicos que podem ser importantes para o sucesso do seu negócio, com a reflexão sobre os pontos apresentados sua visão sobre a empresa pode mudar.",
+  },
+  {
+    imageUrl: "/logo-starthub.png",
+    title: "Título do Card 2",
+    description: "Esta é a descrição do card 2.",
+  },
+  {
+    imageUrl: "/logo-starthub.png",
+    title: "Título do Card 3",
+    description: "Esta é a descrição do card 3.",
+  },
+  {
+    imageUrl: "/logo-starthub.png",
+    title: "Título do Card 3",
+    description: "Esta é a descrição do card 3.",
+  },
+  {
+    imageUrl: "/logo-starthub.png",
+    title: "Título do Card 3",
+    description: "Esta é a descrição do card 3.",
+  },
+];
 
 export default async function Destaque() {
   return (
@@ -32,9 +60,9 @@ export default async function Destaque() {
               features={[
                 "Inteligência Artificial",
                 "Maior Assertividade",
-                "Reflexão"
+                "Reflexão",
               ]}
-              serviceName='dados-relevantes'
+              serviceName="dados-relevantes"
             />
             <ServiceCard
               title="Geração de Nomes"
@@ -42,6 +70,25 @@ export default async function Destaque() {
               features={["Maior relevância", "Criatividade"]}
               serviceName="gerar-nomes"
             />
+          </div>
+        </div>
+      </section>
+      <FullWidthContainer
+        title="DICA: Esteja Aberto ao Feedback"
+        description="Feedback é uma ferramenta valiosa para o crescimento de sua startup. Esteja aberto a receber críticas construtivas de clientes, mentores, investidores e outros stakeholders. Use esse feedback para iterar e melhorar continuamente seu produto ou serviço, adaptando-se às necessidades do mercado."
+      />
+      <section className="mt-20 px-4 container mx-auto">
+        <Title>Nossos Serviços</Title>
+        <div className="container mx-auto p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {cardsData.map((card, index) => (
+              <CardService
+                key={index}
+                imageUrl={card.imageUrl}
+                title={card.title}
+                description={card.description}
+              />
+            ))}
           </div>
         </div>
       </section>
