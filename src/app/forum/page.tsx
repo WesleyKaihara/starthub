@@ -116,7 +116,7 @@ export default function Home() {
             <Link href={`/forum/discussao/${discussion.id}`} key={index}>
               <div className="cursor-pointer flex bg-white p-4 rounded-lg shadow-md mb-4 transition-transform transform hover-scale-101 hover:shadow-md">
                 <img
-                  src="logo.png"
+                  src="/logo-starthub.png"
                   alt="logo da starthub"
                   className="w-20 h-20 object-cover rounded-lg mr-4 aspect-square"
                 />

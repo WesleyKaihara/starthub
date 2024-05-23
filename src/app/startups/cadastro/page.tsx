@@ -148,7 +148,7 @@ const StartupForm: React.FC = () => {
                   />
                 ) : (
                   <img
-                    src="/logo.png"
+                    src="/logo-starthub.png"
                     alt="Upload Icon"
                     className="w-full h-full cursor-pointer object-cover"
                     onClick={handleClickUpload}

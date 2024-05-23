@@ -17,4 +17,25 @@ export class AnalysisService {
     });
     return topicos;
   }
+
+  static async listarFormasVenda(descricaoProjeto: string) {
+    const formasRentabilizar = await axios.post(`${API_HOST}/analysis/sales-locations`, {
+      projectDescription: descricaoProjeto,
+    });
+    return formasRentabilizar;
+  }
+
+  static async apresentarIdeiasAleatorias(descricaoProjeto: string) {
+    const ideias = await axios.post(`${API_HOST}/analysis/random-suggestions`, {
+      projectDescription: descricaoProjeto,
+    });
+    return ideias;
+  }
+
+  static async sugestoesFerramentas(descricaoProjeto: string) {
+    const ferramentas = await axios.post(`${API_HOST}/analysis/tools`, {
+      projectDescription: descricaoProjeto,
+    });
+    return ferramentas;
+  }
 }

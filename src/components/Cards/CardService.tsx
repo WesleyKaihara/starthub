@@ -1,19 +1,29 @@
+import Link from "next/link";
 import React from "react";
 
 interface CardProps {
   imageUrl: string;
   title: string;
   description: string;
+  href: string;
 }
 
-const CardService: React.FC<CardProps> = ({ imageUrl, title, description }) => {
+const CardService: React.FC<CardProps> = ({
+  imageUrl,
+  title,
+  description,
+  href,
+}) => {
   const truncatedDescription =
     description.length > 70
       ? description.substring(0, 70) + "..."
       : description;
 
   return (
-    <div className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-white transition-transform transform hover-scale-101 duration-300 cursor-pointer">
+    <Link
+      href={href}
+      className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-white transition-transform transform hover-scale-101 duration-300 cursor-pointer"
+    >
       <div className="h-64 overflow-hidden">
         <img
           className="w-full h-full object-cover"
@@ -28,7 +38,7 @@ const CardService: React.FC<CardProps> = ({ imageUrl, title, description }) => {
           Adquirir
         </button>
       </div>
-    </div>
+    </Link>
   );
 };
 

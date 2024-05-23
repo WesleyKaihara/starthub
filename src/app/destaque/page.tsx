@@ -8,28 +8,33 @@ import Title from "@/components/Title";
 const cardsData = [
   {
     imageUrl: "/logo-starthub.png",
-    title: "Título do Card 1",
-    description: "Receba recomendações de tópicos que podem ser importantes para o sucesso do seu negócio, com a reflexão sobre os pontos apresentados sua visão sobre a empresa pode mudar.",
+    title: "Rentabilizar ideia",
+    description: "Receba recomendações de formas para gerar valor com sua ideia",
+    href: "/ferramentas/rentabilizar-ideia"
   },
   {
     imageUrl: "/logo-starthub.png",
-    title: "Título do Card 2",
+    title: "Aumentar produtividade",
     description: "Esta é a descrição do card 2.",
+    href: "/ferramentas/ferramentas-externas"
   },
   {
     imageUrl: "/logo-starthub.png",
     title: "Título do Card 3",
     description: "Esta é a descrição do card 3.",
+    href: ""
   },
   {
     imageUrl: "/logo-starthub.png",
     title: "Título do Card 3",
     description: "Esta é a descrição do card 3.",
+    href: ""
   },
   {
     imageUrl: "/logo-starthub.png",
     title: "Título do Card 3",
     description: "Esta é a descrição do card 3.",
+    href: ""
   },
 ];
 
@@ -87,6 +92,7 @@ export default async function Destaque() {
                 imageUrl={card.imageUrl}
                 title={card.title}
                 description={card.description}
+                href={card.href}
               />
             ))}
           </div>
