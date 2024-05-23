@@ -120,7 +120,7 @@ export default function Page({ params }: PageProps): ReactNode {
                 <ul>
                   {discussions.map((discussion: any) => (
                     <li className="mt-4" key={discussion.id}>
-                      <Link href={`/discussao/${discussion.id}`}>
+                      <Link href={`/forum/discussao/${discussion.id}`}>
                         <div className="border rounded-md p-4 transition duration-300 ease-in-out hover:bg-gray-200 hover:text-gray-900 cursor-pointer">
                           <h3 className="text-lg font-semibold">{discussion.title}</h3>
                           <p>{discussion.context}</p>

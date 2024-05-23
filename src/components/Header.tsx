@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { IoCloseOutline, IoMenu } from "react-icons/io5";
 
 const Header = () => {
@@ -44,9 +44,7 @@ const Header = () => {
             </li>
             <li>
               <Link href="/forum">
-                <span className="text-xl text-dark cursor-pointer">
-                  Fórum
-                </span>
+                <span className="text-xl text-dark cursor-pointer">Fórum</span>
               </Link>
             </li>
             <li>
@@ -56,14 +54,16 @@ const Header = () => {
                 </span>
               </Link>
             </li>
+
             <li className="relative">
               <span className="hidden md:block absolute top-1/2 right-full transform -translate-y-1/2 h-6 w-1 bg-primary mx-1"></span>
               {session ? (
-                <Link href="/startups">
-                  <span className="lg:mx-1 text-xl cursor-pointer text-dark">
-                    Sair
-                  </span>
-                </Link>
+                <span
+                  className="lg:mx-1 text-xl cursor-pointer text-dark"
+                  onClick={() => signOut()}
+                >
+                  Sair
+                </span>
               ) : (
                 <Link href="/login">
                   <span className="text-xl cursor-pointer text-primary">

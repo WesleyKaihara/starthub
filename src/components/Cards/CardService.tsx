@@ -15,8 +15,8 @@ const CardService: React.FC<CardProps> = ({
   href,
 }) => {
   const truncatedDescription =
-    description.length > 70
-      ? description.substring(0, 70) + "..."
+    description.length > 65
+      ? description.substring(0, 65) + "..."
       : description;
 
   return (
@@ -33,7 +33,9 @@ const CardService: React.FC<CardProps> = ({
       </div>
       <div className="px-6 py-6">
         <div className="font-bold text-xl mb-2">{title}</div>
-        <p className="text-gray-700 text-base mb-4">{truncatedDescription}</p>
+        <p className="text-gray-700 text-base mb-4 text-justify">
+          {truncatedDescription}
+        </p>
         <button className="bg-primary text-white font-bold py-2 px-4 w-full rounded-lg transition-transform transform hover:scale-105 duration-300 over:brightness-90">
           Adquirir
         </button>

@@ -6,22 +6,24 @@ import { ProjectService } from "@/services/ProjectService";
 import { Projeto } from "@/types/Projeto";
 import { AnalysisService } from "@/services/AnalysisService";
 
-interface NameSuggestion {
-  name: string;
+interface TopicoRelevante {
+  title: string;
   description: string;
 }
 
 const steps = [
   { step: 1, label: "Introdução" },
   { step: 2, label: "Descrição do Projeto" },
-  { step: 3, label: "Sugestões de Nomes" },
+  { step: 3, label: "Tópicos Relevantes" },
 ];
 
 export default function Page(): ReactNode {
   const [projetos, setProjetos] = useState<Projeto[]>([]);
   const [selectedProject, setSelectedProject] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [nameSuggestions, setNameSuggestions] = useState<NameSuggestion[]>([]);
+  const [topicosRelevantes, setTopicosRelevantes] = useState<TopicoRelevante[]>(
+    []
+  );
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   const { data: session } = useSession({
@@ -64,13 +66,14 @@ export default function Page(): ReactNode {
 
     setLoading(true);
     try {
-      const { data } = await AnalysisService.gerarSugestoesNomes(
+      const { data } = await AnalysisService.listarFormasVenda(
         selectedProject
       );
-      setNameSuggestions(data.names);
+      console.log(data);
+      setTopicosRelevantes(data.salesLocations);
       setCurrentStep(3);
     } catch (error) {
-      console.error("Erro ao gerar sugestões de nomes:", error);
+      console.error("Erro ao listar formas para rentabilizar projeto:", error);
     } finally {
       setLoading(false);
     }
@@ -104,7 +107,7 @@ export default function Page(): ReactNode {
         {currentStep === 1 && (
           <div className="text-center">
             <h2 className="text-lg font-semibold mb-4">
-              Bem-vindo ao nosso serviço de sugestões de nomes!
+              Bem-vindo ao nosso serviço de sugestões de tópicos para pesquisas!
             </h2>
             <p className="text-gray-700 mb-6">
               Nosso serviço utiliza inteligência artificial para ajudar você a
@@ -177,18 +180,20 @@ export default function Page(): ReactNode {
 
         {currentStep === 3 && (
           <>
-            <h2 className="text-2xl font-semibold my-2">Sugestões de Nomes:</h2>
+            <h2 className="text-2xl font-semibold my-2">
+              Sugestões de formas para rentabilizar sua ideia
+            </h2>
             <div className="w-full">
-              {nameSuggestions.map((suggestion, index) => (
+              {topicosRelevantes.map((topico, index) => (
                 <div
                   key={index}
                   className="border border-primary-300 rounded-md p-6 mb-4"
                 >
                   <p>
-                    <strong>Nome:</strong> {suggestion.name}
+                    <strong>Nome:</strong> {topico.title}
                   </p>
                   <p>
-                    <strong>Descrição:</strong> {suggestion.description}
+                    <strong>Descrição:</strong> {topico.description}
                   </p>
                 </div>
               ))}

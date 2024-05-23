@@ -9,32 +9,37 @@ const cardsData = [
   {
     imageUrl: "/logo-starthub.png",
     title: "Rentabilizar ideia",
-    description: "Receba recomendações de formas para gerar valor com sua ideia",
-    href: "/ferramentas/rentabilizar-ideia"
+    description:
+      "Receba recomendações de formas para gerar valor com sua ideia",
+    href: "/ferramentas/rentabilizar-ideia",
   },
   {
     imageUrl: "/logo-starthub.png",
     title: "Aumentar produtividade",
-    description: "Esta é a descrição do card 2.",
-    href: "/ferramentas/ferramentas-externas"
+    description:
+      "Levantamento de ferramentas que podem aumentar a produtividade da sua startup",
+    href: "/ferramentas/ferramentas-externas",
   },
   {
     imageUrl: "/logo-starthub.png",
-    title: "Título do Card 3",
-    description: "Esta é a descrição do card 3.",
-    href: ""
+    title: "Pense fora da caixa",
+    description:
+      "Serão geradas ideia para ajudar na desenvolvimento de ideias inovadoras para seu projeto",
+    href: "",
   },
   {
     imageUrl: "/logo-starthub.png",
-    title: "Título do Card 3",
-    description: "Esta é a descrição do card 3.",
-    href: ""
+    title: "Tópicos de Estudo",
+    description:
+      "Levantamento de informações que podem auxiliar na tomada de decisões do Empreendedor",
+    href: "",
   },
   {
     imageUrl: "/logo-starthub.png",
-    title: "Título do Card 3",
-    description: "Esta é a descrição do card 3.",
-    href: ""
+    title: "Geração de nomes",
+    description:
+      "Tenha um nome que represente a sua ideia de maneira clara e marcante",
+    href: "",
   },
 ];
 
