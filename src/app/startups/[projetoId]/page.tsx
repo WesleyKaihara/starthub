@@ -1,5 +1,6 @@
 "use client";
 
+import LoadingScreen from '@/components/Loading';
 import Title from "@/components/Title";
 import { DiscussionService } from "@/services/DiscussaoService";
 import { ProjectService } from "@/services/ProjectService";
@@ -25,7 +26,6 @@ export default function Page({ params }: PageProps): ReactNode {
   const fetchProjeto = useCallback(async () => {
     try {
       const { data } = await ProjectService.buscarProjetoPorId(+params.projetoId);
-      console.log(data);
       setProjeto(data);
     } catch (error) {
       console.error("Erro ao buscar o projeto:", error);
@@ -56,6 +56,7 @@ export default function Page({ params }: PageProps): ReactNode {
       );
       setDiscussions([...discussions, data]);
       setFormData({ title: "", context: "" });
+      fetchDiscussions()
     } catch (error) {
       console.error("Erro ao buscar discussões para o projeto:", error);
     }
@@ -134,7 +135,7 @@ export default function Page({ params }: PageProps): ReactNode {
           </section>
         </div>
       ) : (
-        <div>Carregando...</div>
+        <LoadingScreen />
       )}
     </main>
   );

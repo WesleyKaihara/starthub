@@ -17,7 +17,6 @@ export class ProjectService {
   }
 
   static async cadastrarProjeto(projeto: FormData) {
-    console.log(projeto)
     return await axios.post(`${API_HOST}/project`, projeto, {
       headers: {
         "Content-Type": "multipart/form-data",

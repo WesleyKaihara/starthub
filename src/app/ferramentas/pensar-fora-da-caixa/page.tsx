@@ -69,7 +69,6 @@ export default function Page(): ReactNode {
       const { data } = await AnalysisService.apresentarIdeiasAleatorias(
         selectedProject
       );
-      console.log(data);
       setTopicosRelevantes([]);
       setCurrentStep(3);
     } catch (error) {

@@ -69,7 +69,6 @@ export default function Page(): ReactNode {
       const { data } = await AnalysisService.listarTopicosEstudo(
         selectedProject
       );
-      console.log(data);
       setTopicosRelevantes(data.importanceData);
       setCurrentStep(3);
     } catch (error) {

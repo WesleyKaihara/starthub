@@ -3,7 +3,7 @@ import "../../styles/globals.css";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "StartHub - Destaques",
+  title: "StartHub - Ferramentas",
   description:
     "Plataforma para auxiliar na idealização e desenvolvimento de startups",
 };
@@ -16,7 +16,7 @@ export default function DestaqueLayout({
   return (
     <>
       <Header />
-      <main className='mt-24'>{children}</main>
+      <main className="mt-24">{children}</main>
       <Footer />
     </>
   );

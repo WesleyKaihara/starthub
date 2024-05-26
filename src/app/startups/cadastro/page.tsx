@@ -70,7 +70,6 @@ const StartupForm: React.FC = () => {
 
     try {
       const response = await ProjectService.cadastrarProjeto(formData);
-      console.log("Resposta da API:", response.data);
 
       setStartupData({
         name: "",

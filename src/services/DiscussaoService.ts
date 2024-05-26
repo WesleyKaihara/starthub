@@ -17,11 +17,25 @@ export class DiscussionService {
 
   static iniciarDiscussao(title: string, context: string, projectId: number) {
     return axios.post(`${API_HOST}/discussion`, {
-      title, context, projectId
+      title,
+      context,
+      projectId,
     });
   }
 
   static listarDiscussoes() {
     return axios.get(`${API_HOST}/discussion`);
+  }
+
+  static adicionarInteracao(
+    discussionId: number,
+    message: string,
+    userId: number
+  ) {
+    return axios.post(`${API_HOST}/interaction`, {
+      discussionId,
+      message,
+      userId,
+    });
   }
 }

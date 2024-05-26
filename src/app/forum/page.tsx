@@ -43,7 +43,6 @@ export default function Home() {
   const fetchInteractions = useCallback(async () => {
     try {
       const { data } = await DiscussionService.listarDiscussoes();
-      console.log(data);
       setDiscussions(data);
     } catch (error) {
       console.error("Erro ao buscar as interações da discussão:", error);
@@ -59,7 +58,7 @@ export default function Home() {
   }, [fetchInteractions]);
 
   return (
-    <>
+    <section className='px-4'>
       <section className="container mx-auto mt-24 mb-12">
         <Banner imageUrl="/startup_banner.jpg" alt="Cadastrar nova Startup" />
         <Title>Quais suas maiores dores atualmente?</Title>
@@ -138,6 +137,6 @@ export default function Home() {
           </button>
         )}
       </div>
-    </>
+    </section>
   );
 }

@@ -1,40 +1,18 @@
-"use client";
+import React from "react";
+import { FaSpinner } from "react-icons/fa";
 
-import { useEffect, useState } from 'react';
-
-interface LoadingScreenProps {
-  isLoading: boolean;
-}
-
-export const LoadingScreen: React.FC<LoadingScreenProps> = ({ isLoading }) => {
-  const [display, setDisplay] = useState("flex");
-
-  useEffect(() => {
-    if (!isLoading) {
-      setTimeout(() => {
-        setDisplay("none");
-      }, 1000);
-    } else {
-      setDisplay("flex");
-    }
-  }, [isLoading]);
-
+const LoadingScreen = () => {
   return (
     <div
-      style={{
-        display: display,
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        backgroundColor: "rgba(255, 255, 255, 0.8)",
-        zIndex: 9999,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+      className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white z-50"
+      style={{ backdropFilter: "blur(5px)" }}
     >
-      <div className="loader"></div>
+      <FaSpinner
+        className="text-primary animate-spin"
+        style={{ fontSize: "4rem" }}
+      />
     </div>
   );
 };
+
+export default LoadingScreen;

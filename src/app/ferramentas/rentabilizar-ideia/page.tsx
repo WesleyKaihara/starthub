@@ -64,7 +64,6 @@ export default function Page(): ReactNode {
     setLoading(true);
     try {
       const { data } = await AnalysisService.listarFormasVenda(selectedProject);
-      console.log(data);
       setTopicosRelevantes(data.salesLocations);
       setCurrentStep(3);
     } catch (error) {
