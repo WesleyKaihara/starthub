@@ -1,27 +1,19 @@
 "use client";
 
-import { UserService } from "@/services/UserService";
-import { signIn } from "next-auth/react";
-import Link from "next/link";
 import React, { useState, FormEvent, ChangeEvent } from "react";
-import { HiEye, HiEyeOff } from "react-icons/hi";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { UserService } from '@/services/UserService';
 
-const CadastroPage: React.FC = () => {
+const SignIn: React.FC = () => {
   const [nome, setNome] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState<boolean>(false);
+  const router = useRouter();
 
-  const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setErrorMessage("As senhas não coincidem.");
-      return;
-    }
 
     try {
       await UserService.cadastrarUsuario({
@@ -47,7 +39,7 @@ const CadastroPage: React.FC = () => {
     }
   };
 
-  const handleNomeChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNome(e.target.value);
   };
 
@@ -59,152 +51,104 @@ const CadastroPage: React.FC = () => {
     setPassword(e.target.value);
   };
 
-  const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setConfirmPassword(e.target.value);
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
+  const handleSignUpRedirect = () => {
+    router.push("/cadastro");
   };
 
   return (
-    <div
-      className="flex flex-col lg:flex-row h-screen"
+    <section
+      className="min-h-screen flex items-center justify-center bg-gray-50"
       style={{
-        backgroundImage: 'url("/auth-background.svg")',
+        backgroundImage: "url('/background/purple-animated-bg.svg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        width: "100%",
+        backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="lg:w-1/2 hidden lg:flex text-white justify-center items-center">
-        <h1 className="text-5xl lg:text-7xl text-center">STARTHUB</h1>
-      </div>
-
-      <div className="lg:w-1/2 bg-gray-100 flex justify-center items-center w-full h-full">
-        <div className="max-w-md w-full px-4">
-          <div className="lg:hidden flex justify-center mb-8">
-            <Link href="/" className="text-primary text-6xl font-bold">
-              StartHub
-            </Link>
+      <div className="w-full max-w-md bg-white bg-opacity-90 rounded-lg shadow-md p-6 space-y-4">
+        <div className="flex flex-col items-center mb-6 text-2xl font-semibold text-gray-900">
+          <img className="w-12 h-12 mb-2" src="/logo-starthub.png" alt="logo" />
+          StartHub
+        </div>
+        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-center">
+          Acessar minha conta
+        </h1>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label
+              htmlFor="email"
+              className="block mb-2 text-sm font-medium text-gray-900"
+            >
+              Nome Completo
+            </label>
+            <input
+              type="text"
+              name="nome"
+              id="email"
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              placeholder="Nome Sobrenome"
+              value={nome}
+              onChange={handleNameChange}
+              required
+            />
           </div>
-          <h2 className="text-4xl font-bold mb-4">Cadastro</h2>
-          <form onSubmit={handleSignUp}>
-            <div className="mb-4">
-              <label
-                htmlFor="nome"
-                className="block text-gray-700 font-bold mb-2"
-              >
-                Nome Completo
-              </label>
-              <input
-                type="text"
-                id="nome"
-                placeholder="Informe seu nome"
-                className="w-full border border-gray-300 rounded px-3 py-2"
-                value={nome}
-                onChange={handleNomeChange}
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-gray-700 font-bold mb-2"
-              >
-                E-mail
-              </label>
-              <input
-                type="email"
-                id="email"
-                placeholder="Informe seu e-mail"
-                className="w-full border border-gray-300 rounded px-3 py-2"
-                value={email}
-                onChange={handleEmailChange}
-              />
-            </div>
-            <div className="mb-4 relative">
-              <label
-                htmlFor="password"
-                className="block text-gray-700 font-bold mb-2"
-              >
-                Senha
-              </label>
-              <div className="flex items-center">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  placeholder="Informe sua senha"
-                  className="w-full border border-gray-300 rounded px-3 py-2 pr-10"
-                  value={password}
-                  onChange={handlePasswordChange}
-                />
-                <button
-                  type="button"
-                  className="absolute right-0 pr-3 flex items-center focus:outline-none"
-                  onClick={togglePasswordVisibility}
-                >
-                  {showPassword ? (
-                    <HiEyeOff className="h-6 w-6 text-gray-500" />
-                  ) : (
-                    <HiEye className="h-6 w-6 text-gray-500" />
-                  )}
-                </button>
-              </div>
-            </div>
-            <div className="mb-4 relative">
-              <label
-                htmlFor="confirm-password"
-                className="block text-gray-700 font-bold mb-2"
-              >
-                Confirme a Senha
-              </label>
-              <div className="flex items-center">
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  id="confirm-password"
-                  placeholder="Confirme sua senha"
-                  className="w-full border border-gray-300 rounded px-3 py-2 pr-10"
-                  value={confirmPassword}
-                  onChange={handleConfirmPasswordChange}
-                />
-                <button
-                  type="button"
-                  className="absolute right-0 pr-3 flex items-center focus:outline-none"
-                  onClick={toggleConfirmPasswordVisibility}
-                >
-                  {showConfirmPassword ? (
-                    <HiEyeOff className="h-6 w-6 text-gray-500" />
-                  ) : (
-                    <HiEye className="h-6 w-6 text-gray-500" />
-                  )}
-                </button>
-              </div>
-            </div>
-            {errorMessage && (
-              <p className="text-red-500 mb-4">{errorMessage}</p>
-            )}
-            <button
-              type="submit"
-              className="bg-primary transition duration-300 ease-in-out hover:filter hover:brightness-90 text-white font-bold py-2 px-4 rounded w-full mb-4"
+          <div className="mb-4">
+            <label
+              htmlFor="email"
+              className="block mb-2 text-sm font-medium text-gray-900"
+            >
+              E-mail
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              placeholder="nome@email.com"
+              value={email}
+              onChange={handleEmailChange}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="password"
+              className="block mb-2 text-sm font-medium text-gray-900"
+            >
+              Senha
+            </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="••••••••"
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              value={password}
+              onChange={handlePasswordChange}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2"
+          >
+            Entrar
+          </button>
+          {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
+          <p className="text-sm font-light text-gray-500">
+            Não tem uma conta?{" "}
+            <a
+              href="#"
+              className="font-medium text-primary-600 hover:underline"
+              onClick={handleSignUpRedirect}
             >
               Cadastrar
-            </button>
-          </form>
-          <button
-            type="button"
-            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded w-full"
-            onClick={() => (window.location.href = "/login")}
-          >
-            Já tenho uma conta
-          </button>
-        </div>
+            </a>
+          </p>
+        </form>
       </div>
-    </div>
+    </section>
   );
 };
 
-export default CadastroPage;
+export default SignIn;
