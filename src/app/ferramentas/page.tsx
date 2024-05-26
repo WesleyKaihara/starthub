@@ -1,7 +1,5 @@
 "use client";
 
-import Title from '@/components/Title';
-
 export default async function Home() {
   return (
     <>

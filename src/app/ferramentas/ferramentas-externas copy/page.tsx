@@ -5,24 +5,25 @@ import { redirect } from "next/navigation";
 import { ProjectService } from "@/services/ProjectService";
 import { Projeto } from "@/types/Projeto";
 import { AnalysisService } from "@/services/AnalysisService";
-import Slider from "react-slick";
 
 interface TopicoRelevante {
-  title: string;
+  name: string;
   description: string;
 }
 
 const steps = [
   { step: 1, label: "Introdução" },
   { step: 2, label: "Descrição do Projeto" },
-  { step: 3, label: "Tópicos Relevantes" }, 
+  { step: 3, label: "Tópicos Relevantes" },
 ];
 
 export default function Page(): ReactNode {
   const [projetos, setProjetos] = useState<Projeto[]>([]);
   const [selectedProject, setSelectedProject] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [topicosRelevantes, setTopicosRelevantes] = useState<TopicoRelevante[]>([]);
+  const [topicosRelevantes, setTopicosRelevantes] = useState<TopicoRelevante[]>(
+    []
+  );
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   const { data: session } = useSession({
@@ -34,7 +35,9 @@ export default function Page(): ReactNode {
 
   const fetchProjects = useCallback(async (userId: number) => {
     try {
-      const { data } = await ProjectService.buscarProjetosUsuario(Number(userId));
+      const { data } = await ProjectService.buscarProjetosUsuario(
+        Number(userId)
+      );
       setProjetos(data);
     } catch (error) {
       console.error("Erro ao buscar projetos do usuário:", error);
@@ -63,9 +66,10 @@ export default function Page(): ReactNode {
 
     setLoading(true);
     try {
-      const { data } = await AnalysisService.listarFormasVenda(selectedProject);
-      console.log(data);
-      setTopicosRelevantes(data.salesLocations);
+      const { data } = await AnalysisService.sugestoesFerramentas(
+        selectedProject
+      );
+      setTopicosRelevantes(data.tools);
       setCurrentStep(3);
     } catch (error) {
       console.error("Erro ao listar formas para rentabilizar projeto:", error);
@@ -76,14 +80,6 @@ export default function Page(): ReactNode {
 
   const handleStart = () => {
     setCurrentStep(2);
-  };
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
   };
 
   return (
@@ -184,20 +180,23 @@ export default function Page(): ReactNode {
         {currentStep === 3 && (
           <>
             <h2 className="text-2xl font-semibold my-2">
-              Sugestões de formas para rentabilizar sua ideia
+              Sugestões de ferramentas para utilizar durante o desenvolvimento da startup
             </h2>
-            <Slider {...settings}>
+            <div className="w-full">
               {topicosRelevantes.map((topico, index) => (
-                <div key={index} className="border border-primary-300 rounded-md p-6 mb-4">
+                <div
+                  key={index}
+                  className="border border-primary-300 rounded-md p-6 mb-4"
+                >
                   <p>
-                    <strong>Nome:</strong> {topico.title}
+                    <strong>Nome:</strong> {topico.name}
                   </p>
                   <p>
                     <strong>Descrição:</strong> {topico.description}
                   </p>
                 </div>
               ))}
-            </Slider>
+            </div>
           </>
         )}
       </div>

@@ -25,21 +25,21 @@ const cardsData = [
     title: "Pense fora da caixa",
     description:
       "Serão geradas ideia para ajudar na desenvolvimento de ideias inovadoras para seu projeto",
-    href: "",
+    href: "/ferramentas/pensar-fora-da-caixa",
   },
   {
     imageUrl: "/logo-starthub.png",
     title: "Tópicos de Estudo",
     description:
       "Levantamento de informações que podem auxiliar na tomada de decisões do Empreendedor",
-    href: "",
+    href: "/ferramentas/dados-relevantes",
   },
   {
     imageUrl: "/logo-starthub.png",
     title: "Geração de nomes",
     description:
       "Tenha um nome que represente a sua ideia de maneira clara e marcante",
-    href: "",
+    href: "/ferramentas/gerar-nomes",
   },
 ];
 
