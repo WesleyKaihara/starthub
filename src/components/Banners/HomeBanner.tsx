@@ -4,13 +4,22 @@ import React, { ReactNode } from "react";
 
 type FullScreenBannerProps = {
   children: ReactNode;
+  backgroundImage: string;
 };
 
-const FullScreenBanner: React.FC<FullScreenBannerProps> = ({ children }) => {
+const FullScreenBanner: React.FC<FullScreenBannerProps> = ({
+  children,
+  backgroundImage,
+}) => {
   return (
     <div
-      className="relative w-screen bg-primary text-white"
-      style={{ height: "70vh" }}
+      className="relative w-screen text-white font-semibold"
+      style={{
+        height: "90vh",
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center">{children}</div>

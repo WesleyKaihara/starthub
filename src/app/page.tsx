@@ -12,7 +12,7 @@ export default async function Home() {
   return (
     <>
       <Header />
-      <FullScreenBanner>
+      <FullScreenBanner backgroundImage="/background/white-fade.svg">
         <h1 className="text-5xl">Tem uma idéia?</h1>
         <p className="text-3xl mt-5">
           Grandes ideias começam pequenas, mas só crescem com determinação e

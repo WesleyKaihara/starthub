@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, ReactNode, useCallback, useEffect } from "react";
+import { useState, ReactNode, useCallback, useEffect, useRef } from "react";
 import Banner from "@/components/Banner";
 import Title from "@/components/Title";
 import { DiscussionService } from "@/services/DiscussaoService";
-import Link from 'next/link';
+import Link from "next/link";
 
 type ModalProps = {
   show: boolean;
@@ -13,11 +13,30 @@ type ModalProps = {
 };
 
 function Modal({ show, onClose, children }: ModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    if (show) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [show]);
+
   if (!show) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded shadow-lg w-1/2">
+      <div ref={modalRef} className="bg-white p-6 rounded shadow-lg w-1/2">
         <button onClick={onClose} className="float-right text-black font-bold">
           X
         </button>
@@ -29,7 +48,8 @@ function Modal({ show, onClose, children }: ModalProps) {
 
 export default function Home() {
   const [activeModal, setActiveModal] = useState<number | null>(null);
-  const [discussions, setDiscussions] = useState<any>([]);
+  const [email, setEmail] = useState<string>("");
+  const [discussions, setDiscussions] = useState<any[]>([]);
   const [visibleDiscussions, setVisibleDiscussions] = useState<number>(3);
 
   const handleOpenModal = (modalId: number) => {
@@ -38,6 +58,15 @@ export default function Home() {
 
   const handleCloseModal = () => {
     setActiveModal(null);
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Email submitted:", email);
   };
 
   const fetchInteractions = useCallback(async () => {
@@ -58,7 +87,7 @@ export default function Home() {
   }, [fetchInteractions]);
 
   return (
-    <section className='px-4'>
+    <section className="px-4">
       <section className="container mx-auto mt-24 mb-12">
         <Banner imageUrl="/startup_banner.jpg" alt="Cadastrar nova Startup" />
         <Title>Quais suas maiores dores atualmente?</Title>
@@ -91,20 +120,96 @@ export default function Home() {
         </div>
 
         <Modal show={activeModal === 1} onClose={handleCloseModal}>
-          <h2 className="text-xl font-bold mb-4">Modal 1</h2>
-          <p>Conteúdo do Modal 1.</p>
+          <h2 className="text-xl font-bold mb-4">Gerar mais vendas</h2>
+          <p>
+            Compartilhe seu e-mail para receber mais informações sobre como
+            aumentar suas vendas.
+          </p>
+          <form onSubmit={handleSubmit} className="mt-4">
+            <input
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+              className="border p-2 w-full rounded mb-4"
+              placeholder="Seu e-mail"
+              required
+            />
+            <button
+              type="submit"
+              className="bg-primary text-white font-bold py-2 px-4 rounded"
+            >
+              Enviar
+            </button>
+          </form>
         </Modal>
         <Modal show={activeModal === 2} onClose={handleCloseModal}>
-          <h2 className="text-xl font-bold mb-4">Modal 2</h2>
-          <p>Conteúdo do Modal 2.</p>
+          <h2 className="text-xl font-bold mb-4">Gestão de pessoas</h2>
+          <p>
+            Compartilhe seu e-mail para receber mais informações sobre gestão de
+            pessoas.
+          </p>
+          <form onSubmit={handleSubmit} className="mt-4">
+            <input
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+              className="border p-2 w-full rounded mb-4"
+              placeholder="Seu e-mail"
+              required
+            />
+            <button
+              type="submit"
+              className="bg-primary text-white font-bold py-2 px-4 rounded"
+            >
+              Enviar
+            </button>
+          </form>
         </Modal>
         <Modal show={activeModal === 3} onClose={handleCloseModal}>
-          <h2 className="text-xl font-bold mb-4">Modal 3</h2>
-          <p>Conteúdo do Modal 3.</p>
+          <h2 className="text-xl font-bold mb-4">Financeiro</h2>
+          <p>
+            Compartilhe seu e-mail para receber mais informações sobre gestão
+            financeira.
+          </p>
+          <form onSubmit={handleSubmit} className="mt-4">
+            <input
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+              className="border p-2 w-full rounded mb-4"
+              placeholder="Seu e-mail"
+              required
+            />
+            <button
+              type="submit"
+              className="bg-primary text-white font-bold py-2 px-4 rounded"
+            >
+              Enviar
+            </button>
+          </form>
         </Modal>
         <Modal show={activeModal === 4} onClose={handleCloseModal}>
-          <h2 className="text-xl font-bold mb-4">Modal 4</h2>
-          <p>Conteúdo do Modal 4.</p>
+          <h2 className="text-xl font-bold mb-4">Marketing</h2>
+          <p>
+            Compartilhe seu e-mail para receber mais informações sobre
+            estratégias de marketing.
+          </p>
+          <form onSubmit={handleSubmit} className="mt-4">
+            <input
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+              className="border p-2 w-full rounded mb-4"
+              placeholder="Seu e-mail"
+              required
+            />
+            <button
+              type="submit"
+              className="bg-primary text-white font-bold py-2 px-4 rounded"
+            >
+              Enviar
+            </button>
+          </form>
         </Modal>
       </section>
       <Title>Discussões</Title>

@@ -10,9 +10,14 @@ interface CardProps {
   features?: string[];
 }
 
-const ServiceCard: React.FC<CardProps> = ({ title, description, features, serviceName }) => {
+const ServiceCard: React.FC<CardProps> = ({
+  title,
+  description,
+  features,
+  serviceName,
+}) => {
   const limitedFeatures = features ? features.slice(0, 3) : [];
-  
+
   return (
     <div className="mb-8" style={{ height: "400px" }}>
       <div
@@ -47,8 +52,10 @@ const ServiceCard: React.FC<CardProps> = ({ title, description, features, servic
           )}
           <p className="text-justify">{description}</p>
           <button
-            onClick={() => (window.location.href = `/ferramentas/${serviceName}`)}
-            className="bg-primary text-white py-2 px-12 rounded-full absolute bottom-4 left-4"
+            onClick={() =>
+              (window.location.href = `/ferramentas/${serviceName}`)
+            }
+            className="bg-primary text-white py-2 px-12 rounded-full absolute bottom-4 left-4 transition-transform transform hover:scale-105 duration-300 hover:brightness-80"
           >
             Adquirir
           </button>
