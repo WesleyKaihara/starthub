@@ -6,11 +6,6 @@ import { ProjectService } from "@/services/ProjectService";
 import { Projeto } from "@/types/Projeto";
 import { AnalysisService } from "@/services/AnalysisService";
 
-interface TopicoRelevante {
-  name: string;
-  description: string;
-}
-
 const steps = [
   { step: 1, label: "Introdução" },
   { step: 2, label: "Descrição do Projeto" },
@@ -21,7 +16,7 @@ export default function Page(): ReactNode {
   const [projetos, setProjetos] = useState<Projeto[]>([]);
   const [selectedProject, setSelectedProject] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [topicosRelevantes, setTopicosRelevantes] = useState<TopicoRelevante[]>(
+  const [topicosRelevantes, setTopicosRelevantes] = useState<string[]>(
     []
   );
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -69,7 +64,7 @@ export default function Page(): ReactNode {
       const { data } = await AnalysisService.apresentarIdeiasAleatorias(
         selectedProject
       );
-      setTopicosRelevantes([]);
+      setTopicosRelevantes(data.suggestions);
       setCurrentStep(3);
     } catch (error) {
       console.error("Erro ao listar formas para rentabilizar projeto:", error);
@@ -189,10 +184,7 @@ export default function Page(): ReactNode {
                   className="border border-primary-300 rounded-md p-6 mb-4"
                 >
                   <p>
-                    <strong>Nome:</strong> {topico.name}
-                  </p>
-                  <p>
-                    <strong>Descrição:</strong> {topico.description}
+                   {topico}
                   </p>
                 </div>
               ))}

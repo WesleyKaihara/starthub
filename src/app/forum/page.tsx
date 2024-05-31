@@ -89,7 +89,6 @@ export default function Home() {
   return (
     <section className="px-4">
       <section className="container mx-auto mt-24 mb-12">
-        <Banner imageUrl="/startup_banner.jpg" alt="Cadastrar nova Startup" />
         <Title>Quais suas maiores dores atualmente?</Title>
 
         <div className="flex flex-col md:flex-row justify-center mt-8 space-y-4 md:space-y-0 md:space-x-4">

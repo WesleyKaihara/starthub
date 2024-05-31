@@ -54,6 +54,7 @@ export default function StartupsPage() {
                     description={projeto.description}
                     buttonText="Mais detalhes"
                     buttonOnClick={() => handleButtonClick(projeto.id)}
+                    cardOnClick={() => handleButtonClick(projeto.id)}
                   />
                 ))
               ) : (

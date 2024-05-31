@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import { Inter } from "next/font/google";
 import AuthProvider from "../contexts/AuthProvider";
+import { ChakraProvider } from "@chakra-ui/react";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -24,9 +25,11 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={inter.className}>
-        <AuthProvider>
-          <main>{children}</main>
-        </AuthProvider>
+        <ChakraProvider>
+          <AuthProvider>
+            <main>{children}</main>
+          </AuthProvider>
+        </ChakraProvider>
       </body>
     </html>
   );

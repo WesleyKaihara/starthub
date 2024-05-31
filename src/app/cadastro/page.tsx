@@ -10,11 +10,12 @@ const SignIn: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       await UserService.cadastrarUsuario({
         name: nome,
@@ -36,6 +37,8 @@ const SignIn: React.FC = () => {
       }
     } catch (error) {
       setErrorMessage("Ocorreu um erro ao cadastrar usuário. Tente novamente");
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -52,7 +55,7 @@ const SignIn: React.FC = () => {
   };
 
   const handleSignUpRedirect = () => {
-    router.push("/cadastro");
+    router.push("/login");
   };
 
   return (
@@ -71,7 +74,7 @@ const SignIn: React.FC = () => {
           StartHub
         </div>
         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-center">
-          Acessar minha conta
+          Iniciar uma conta
         </h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -131,18 +134,19 @@ const SignIn: React.FC = () => {
           <button
             type="submit"
             className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2"
+            disabled={loading}
           >
-            Entrar
+            {loading? "Carregando...": "Cadastrar"}
           </button>
           {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
           <p className="text-sm font-light text-gray-500">
-            Não tem uma conta?{" "}
+           Já possui uma conta?{" "}
             <a
               href="#"
               className="font-medium text-primary-600 hover:underline"
               onClick={handleSignUpRedirect}
             >
-              Cadastrar
+              Entrar
             </a>
           </p>
         </form>

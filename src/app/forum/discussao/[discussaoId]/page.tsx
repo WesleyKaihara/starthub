@@ -35,7 +35,7 @@ export default function Page({ params }: PageProps) {
       const { data } = await DiscussionService.buscarInteracoesDiscussao(
         +params.discussaoId
       );
-      setInteractions(data);
+      setInteractions(data.reverse());
     } catch (error) {
       console.error("Erro ao buscar as interações da discussão:", error);
     }

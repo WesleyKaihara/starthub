@@ -15,14 +15,16 @@ interface TopicoRelevante {
 const steps = [
   { step: 1, label: "Introdução" },
   { step: 2, label: "Descrição do Projeto" },
-  { step: 3, label: "Tópicos Relevantes" }, 
+  { step: 3, label: "Tópicos Relevantes" },
 ];
 
 export default function Page(): ReactNode {
   const [projetos, setProjetos] = useState<Projeto[]>([]);
   const [selectedProject, setSelectedProject] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [topicosRelevantes, setTopicosRelevantes] = useState<TopicoRelevante[]>([]);
+  const [topicosRelevantes, setTopicosRelevantes] = useState<TopicoRelevante[]>(
+    []
+  );
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   const { data: session } = useSession({
@@ -34,7 +36,9 @@ export default function Page(): ReactNode {
 
   const fetchProjects = useCallback(async (userId: number) => {
     try {
-      const { data } = await ProjectService.buscarProjetosUsuario(Number(userId));
+      const { data } = await ProjectService.buscarProjetosUsuario(
+        Number(userId)
+      );
       setProjetos(data);
     } catch (error) {
       console.error("Erro ao buscar projetos do usuário:", error);
@@ -185,18 +189,19 @@ export default function Page(): ReactNode {
             <h2 className="text-2xl font-semibold my-2">
               Sugestões de formas para rentabilizar sua ideia
             </h2>
-            <Slider {...settings}>
-              {topicosRelevantes.map((topico, index) => (
-                <div key={index} className="border border-primary-300 rounded-md p-6 mb-4">
-                  <p>
-                    <strong>Nome:</strong> {topico.title}
-                  </p>
-                  <p>
-                    <strong>Descrição:</strong> {topico.description}
-                  </p>
-                </div>
-              ))}
-            </Slider>
+            {topicosRelevantes.map((topico, index) => (
+              <div
+                key={index}
+                className="border border-primary-300 rounded-md p-6 mb-4"
+              >
+                <p>
+                  <strong>Nome:</strong> {topico.title}
+                </p>
+                <p>
+                  <strong>Descrição:</strong> {topico.description}
+                </p>
+              </div>
+            ))}
           </>
         )}
       </div>
