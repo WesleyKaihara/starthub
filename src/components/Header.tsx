@@ -24,23 +24,14 @@ import { AiOutlineClose } from "react-icons/ai";
 import { BiChevronDown } from "react-icons/bi";
 
 const navLinks = [
-  { name: "Sobre", path: "#" },
   { name: "Ferramentas", path: "/ferramentas" },
   { name: "Planos", path: "#" },
 ];
 
 const dropdownLinks = [
   {
-    name: "Blog",
-    path: "#",
-  },
-  {
-    name: "Documentation",
-    path: "#",
-  },
-  {
-    name: "Github Repo",
-    path: "#",
+    name: "Fórum",
+    path: "/forum",
   },
 ];
 
@@ -80,7 +71,7 @@ export default function Navbar() {
                   <>
                     <MenuButton _hover={{ color: "blue.400" }}>
                       <Flex alignItems="center">
-                        <Text>Community</Text>
+                        <Text>Comunidade</Text>
                         <Icon
                           as={BiChevronDown}
                           h={5}
