@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment } from "react";
 import {
   chakra,
   Container,
@@ -6,13 +6,13 @@ import {
   Text,
   useColorModeValue,
   Flex,
-  Box
-} from '@chakra-ui/react';
+  Box,
+} from "@chakra-ui/react";
 
 const features = [
   {
-    title: 'Inovação',
-    detail: 'All components have MIT license, you can use in any project',
+    title: "Inovação",
+    detail: "All components have MIT license, you can use in any project",
     icon: (
       <svg
         aria-hidden="true"
@@ -36,11 +36,12 @@ const features = [
           1.305.45 2.272.45a5.846 5.846 0 002.547-.576L19.25 9.367l-2.547 5.807z`}
         ></path>
       </svg>
-    )
+    ),
   },
   {
-    title: 'Validação',
-    detail: 'Build type safe applications, all components and hooks export types',
+    title: "Validação",
+    detail:
+      "Build type safe applications, all components and hooks export types",
     icon: (
       <svg
         aria-hidden="true"
@@ -62,11 +63,12 @@ const features = [
         0 11-1.021-1.1l2.639-2.45-2.64-2.45z`}
         ></path>
       </svg>
-    )
+    ),
   },
   {
-    title: 'Conhecimento',
-    detail: 'Build type safe applications, all components and hooks export types',
+    title: "Conhecimento",
+    detail:
+      "Build type safe applications, all components and hooks export types",
     icon: (
       <svg
         aria-hidden="true"
@@ -90,40 +92,53 @@ const features = [
           21.982a.75.75 0 01.864-.615 9.56 9.56 0 003.186 0 .75.75 0 01.25 1.48 11.066 11.066 0 01-3.686 0 .75.75 0 01-.614-.865z`}
         ></path>
       </svg>
-    )
-  }
+    ),
+  },
 ];
 const HeroSection = () => {
   return (
     <Fragment>
-      <Container maxW="6xl" px={{ base: 6}} py={10}>
-        <Stack direction={{ base: 'column', md: 'row' }}>
+      <Container maxW="6xl" px={{ base: 6 }} py={10}>
+        <Stack direction={{ base: "column", md: "row" }}>
           <Stack direction="column" spacing={8} justifyContent="center">
-            <chakra.h1 fontSize="5xl" lineHeight={1} fontWeight="bold" textAlign="left">
+            <chakra.h1
+              fontSize="5xl"
+              lineHeight={1}
+              fontWeight="bold"
+              textAlign="left"
+            >
               Utilização de
-              <chakra.span bgGradient="linear(to-br, #735EF3, #998FF0)" bgClip="text">
-                {' '}
-                Inteligência Artificial{' '}
-              </chakra.span>{' '}
-              <br /> para idealização de Startups
+              <chakra.span
+                bgGradient="linear(to-br, #735EF3, #998FF0)"
+                bgClip="text"
+              >
+                {" "}
+                Inteligência Artificial{" "}
+              </chakra.span>{" "}
+              para idealização de Startups
             </chakra.h1>
             <Text
-              color={useColorModeValue('gray.500', 'gray.400')}
+              color={useColorModeValue("gray.500", "gray.400")}
               fontSize="lg"
               textAlign="left"
               fontWeight="400"
               maxW="700px"
             >
-              Build fully functional accessible web applications faster than ever – TemplatesKart
-              includes more than 80 customizable components and hooks to cover you in any situation
+              Build fully functional accessible web applications faster than
+              ever – TemplatesKart includes more than 80 customizable components
+              and hooks to cover you in any situation
             </Text>
             <Stack
-              direction={{ base: 'column', md: 'row' }}
+              direction={{ base: "column", md: "row" }}
               spacing={{ base: 5, md: 10 }}
               flexWrap="wrap"
             >
               {features.map((feature, index) => (
-                <Stack key={index} direction={{ base: 'row', md: 'column' }} spacing={2}>
+                <Stack
+                  key={index}
+                  direction={{ base: "row", md: "column" }}
+                  spacing={2}
+                >
                   <Flex
                     p={8}
                     maxH="100px"
@@ -138,7 +153,11 @@ const HeroSection = () => {
                     <Text fontSize="md" fontWeight="500">
                       {feature.title}
                     </Text>
-                    <Text fontSize="sm" color="gray.400" maxW={{ base: '100%', md: '200px' }}>
+                    <Text
+                      fontSize="sm"
+                      color="gray.400"
+                      maxW={{ base: "100%", md: "200px" }}
+                    >
                       {feature.detail}
                     </Text>
                   </Stack>
@@ -146,7 +165,7 @@ const HeroSection = () => {
               ))}
             </Stack>
             <Stack
-              direction={{ base: 'column', sm: 'row' }}
+              direction={{ base: "column", sm: "row" }}
               spacing={{ base: 0, sm: 2 }}
               flexWrap="wrap"
             >
@@ -155,13 +174,13 @@ const HeroSection = () => {
                 px={6}
                 bgGradient="linear(to-br, #735EF3, #998FF0)"
                 color="white"
-                _hover={{ bgGradient: 'linear(to-br, #4432B0, #998FF0)' }}
+                _hover={{ bgGradient: "linear(to-br, #4432B0, #998FF0)" }}
                 variant="solid"
                 size="lg"
                 rounded="md"
                 fontWeight="bold"
                 mb={{ base: 2, sm: 0 }}
-                onClick={() => window.location.href = "/ferramentas"}
+                onClick={() => (window.location.href = "/ferramentas")}
               >
                 <chakra.span> Saiba mais </chakra.span>
               </chakra.button>
@@ -171,7 +190,7 @@ const HeroSection = () => {
       </Container>
       <Box overflow="hidden">
         <svg
-          fill={useColorModeValue('#f7fafc', '#171923')}
+          fill={useColorModeValue("#f7fafc", "#171923")}
           width="150%"
           height="56px"
           transform="scaleX(-1)"

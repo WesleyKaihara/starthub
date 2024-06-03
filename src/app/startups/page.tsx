@@ -6,7 +6,9 @@ import { useEffect, useState, useCallback } from "react";
 import CardProjeto from "@/components/CardProjeto";
 import Title from "@/components/Title";
 import Banner from "@/components/Banner";
-import LoadingScreen from "@/components/Loading";
+import { Container } from "@chakra-ui/react";
+import PulseCards from "@/components/Loading/PulseCards";
+import OfferCard from '@/components/Cards/OfferCard';
 
 export default function StartupsPage() {
   const [projetos, setProjetos] = useState<Projeto[]>([]);
@@ -33,39 +35,43 @@ export default function StartupsPage() {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <Container maxW="6xl" py={5}>
+      <OfferCard
+        title="Adicionar uma Startup"
+        subTitle="Salve as informações da sua startup para usar os serviços da plataforma"
+        features={["Análises mais precisas", "Reutilização simplificada"]}
+        buttonTxt="Adicionar minha startup"
+        link='/startups/cadastro'
+      />
       {!loading ? (
-        <>
-          <Banner
-            imageUrl="/startup_banner.jpg"
-            link="/startups/cadastro"
-            alt="Cadastrar nova Startup"
-            target="_self"
-          />
-          <section className="my-10">
-            <Title>Startups</Title>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
-              {projetos.length > 0 ? (
-                projetos.map((projeto) => (
-                  <CardProjeto
-                    key={projeto.id}
-                    imageSrc={projeto.image}
-                    title={projeto.name}
-                    description={projeto.description}
-                    buttonText="Mais detalhes"
-                    buttonOnClick={() => handleButtonClick(projeto.id)}
-                    cardOnClick={() => handleButtonClick(projeto.id)}
-                  />
-                ))
-              ) : (
-                <p>Nenhum projeto encontrado.</p>
-              )}
-            </div>
-          </section>
-        </>
+        <section className="my-10">
+          <Title>Startups</Title>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
+            {projetos.length > 0 ? (
+              projetos.map((projeto) => (
+                <CardProjeto
+                  key={projeto.id}
+                  imageSrc={projeto.image}
+                  title={projeto.name}
+                  description={projeto.description}
+                  buttonText="Mais detalhes"
+                  buttonOnClick={() => handleButtonClick(projeto.id)}
+                  cardOnClick={() => handleButtonClick(projeto.id)}
+                />
+              ))
+            ) : (
+              <>
+                <PulseCards />
+                <PulseCards />
+                <PulseCards />
+                <PulseCards />
+              </>
+            )}
+          </div>
+        </section>
       ) : (
-        <LoadingScreen />
+        <PulseCards />
       )}
-    </div>
+    </Container>
   );
 }

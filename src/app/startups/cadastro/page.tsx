@@ -1,8 +1,23 @@
 "use client";
-import Banner from "@/components/Banner";
+
 import Title from "@/components/Title";
 import { ProjectService } from "@/services/ProjectService";
-import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
+import {
+  Container,
+  FormControl,
+  FormLabel,
+  Input,
+  Textarea,
+  Button,
+  Box,
+  Image,
+  Flex,
+  useColorModeValue,
+  FormErrorMessage,
+  Text,
+} from "@chakra-ui/react";
+import React, { useRef } from "react";
+import { useForm } from "react-hook-form";
 
 interface StartupData {
   name: string;
@@ -13,36 +28,37 @@ interface StartupData {
 }
 
 const StartupForm: React.FC = () => {
-  const [startupData, setStartupData] = useState<StartupData>({
-    name: "",
-    description: "",
-    image: null,
-    previewImage: null,
-    private: false,
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+    setError,
+    clearErrors,
+  } = useForm<StartupData>({
+    defaultValues: {
+      name: "",
+      description: "",
+      image: null,
+      previewImage: null,
+      private: false,
+    },
   });
+
+  const previewImage = watch("previewImage");
+  const descriptionLength = watch("description")?.length || 0;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setStartupData({
-      ...startupData,
-      [name]: value,
-    });
-  };
-
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setStartupData({
-          ...startupData,
-          image: file,
-          previewImage: reader.result as string,
-        });
+        setValue("image", file);
+        setValue("previewImage", reader.result as string);
+        clearErrors("image");
       };
       reader.readAsDataURL(file);
     }
@@ -54,130 +70,173 @@ const StartupForm: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!startupData.image) {
-      alert("Por favor, selecione uma imagem");
+  const onSubmit = async (data: StartupData) => {
+    if (!data.image) {
+      setError("image", {
+        type: "manual",
+        message: "Por favor, selecione uma imagem",
+      });
       return;
     }
 
     const formData = new FormData();
-    formData.append("name", startupData.name);
-    formData.append("description", startupData.description);
-    formData.append("file", startupData.image);
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("file", data.image);
     formData.append("private", "false");
 
     try {
-      const response = await ProjectService.cadastrarProjeto(formData);
+      await ProjectService.cadastrarProjeto(formData);
 
-      setStartupData({
-        name: "",
-        description: "",
-        image: null,
-        previewImage: null,
-        private: false,
-      });
+      setValue("name", "");
+      setValue("description", "");
+      setValue("image", null);
+      setValue("previewImage", null);
+
+      window.location.href = "/startups";
     } catch (error) {
       console.error("Erro ao enviar os dados:", error);
     }
   };
 
   return (
-    <div className="mx-4 md:mx-auto my-4 md:my-10">
-      <Banner
-        imageUrl="/destaque_banner.jpeg"
-        link="/destaque"
-        alt="Aprimorar projeto"
-        target="_self"
-      />
-      <section className="my-10">
-        <Title>Cadastrar uma Startup</Title>
-        <form
-          onSubmit={handleSubmit}
-          className="max-w mx-auto px-6 py-10 bg-gray-100 shadow-lg rounded-lg md:grid md:grid-cols-2 md:gap-4"
-        >
-          <div className="mb-6 md:mb-0">
-            <div className="mb-6">
-              <label
-                htmlFor="name"
-                className="text-3xl block text-dark font-bold mb-2"
-              >
+    <Container maxW="6xl" py={5}>
+      <Title>Cadastrar uma Startup</Title>
+      <Box
+        as="form"
+        onSubmit={handleSubmit(onSubmit)}
+        p={6}
+        bg={useColorModeValue("gray.100", "gray.700")}
+        shadow="lg"
+        rounded="lg"
+      >
+        <Flex direction={{ base: "column", md: "row" }} gap={4}>
+          <Box flex="1">
+            <FormControl id="name" mb={6} isInvalid={!!errors.name}>
+              <FormLabel fontSize="xl" fontWeight="bold">
                 Nome
-              </label>
-              <input
+              </FormLabel>
+              <Input
                 type="text"
-                id="name"
-                name="name"
-                value={startupData.name}
+                {...register("name", {
+                  required: "Nome é obrigatório",
+                  minLength: {
+                    value: 5,
+                    message: "Nome deve ter no mínimo 5 caracteres",
+                  },
+                })}
                 placeholder="Informe o nome do seu produto (Pode ser alterado posteriormente)"
-                onChange={handleInputChange}
-                className="w-full px-3 py-3 border rounded-lg text-dark focus:outline-none focus:border-blue-500"
-                required
               />
-            </div>
-            <div className="mb-6">
-              <label
-                htmlFor="description"
-                className="text-3xl block text-dark font-bold mb-2"
-              >
-                Descrição:
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                value={startupData.description}
-                onChange={handleInputChange}
-                placeholder="Escreva uma descrição sobre seu produto, quais problemas ele busca resolver, pesquisas realizadas no mercado, empresas parceiras e outros tópicos importantes para chamar a atenção de possíveis clientes e colaboradores"
-                className="w-full px-3 py-3 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
+              <FormErrorMessage>
+                {errors.name && errors.name.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl
+              id="description"
+              mb={6}
+              isInvalid={!!errors.description}
+            >
+              <Flex justifyContent="space-between">
+                <FormLabel fontSize="xl" fontWeight="bold">
+                  Descrição
+                </FormLabel>
+                <Text fontSize="md" color="gray.600">
+                  {descriptionLength}/250
+                </Text>
+              </Flex>
+              <Textarea
+                {...register("description", {
+                  required: "Descrição é obrigatória",
+                  minLength: {
+                    value: 50,
+                    message: "Descrição deve ter no mínimo 50 caracteres",
+                  },
+                  maxLength: {
+                    value: 250,
+                    message: "Descrição pode ter no máximo 250 caracteres",
+                  },
+                })}
+                placeholder="Escreva uma descrição sobre seu produto..."
                 rows={15}
-                required
               />
-            </div>
-          </div>
-          <div className="mb-4 w-full flex justify-center items-center relative">
-            <label htmlFor="image" className="cursor-pointer">
-              <div className="relative w-96 h-96">
-                {startupData.previewImage ? (
-                  <img
-                    src={startupData.previewImage}
+              <FormErrorMessage>
+                {errors.description && errors.description.message}
+              </FormErrorMessage>
+            </FormControl>
+          </Box>
+          <Box
+            flex="1"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <FormControl id="image" isInvalid={!!errors.image}>
+              <Box
+                position="relative"
+                w="96"
+                h="96"
+                onClick={handleClickUpload}
+                cursor="pointer"
+                borderWidth={1}
+                borderRadius="lg"
+                overflow="hidden"
+              >
+                {previewImage ? (
+                  <Image
+                    src={previewImage}
                     alt="Imagem da Startup"
-                    className="w-full h-full object-cover"
-                    onClick={handleClickUpload}
+                    objectFit="cover"
+                    w="full"
+                    h="full"
                   />
                 ) : (
-                  <img
+                  <Image
                     src="/logo-starthub.png"
                     alt="Upload Icon"
-                    className="w-full h-full cursor-pointer object-cover"
-                    onClick={handleClickUpload}
+                    objectFit="cover"
+                    w="full"
+                    h="full"
                   />
                 )}
-                <span className="absolute top-2 left-2 bg-white text-xs px-2 py-1 rounded-md">
+                <Box
+                  position="absolute"
+                  top={2}
+                  left={2}
+                  bg="white"
+                  fontSize="xs"
+                  px={2}
+                  py={1}
+                  borderRadius="md"
+                >
                   Tamanho recomendado: 300x300
-                </span>
-              </div>
-              <input
+                </Box>
+              </Box>
+              <Input
                 type="file"
-                id="image"
-                name="image"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="hidden"
                 ref={fileInputRef}
-                required
+                display="none"
               />
-            </label>
-          </div>
-          <button
-            type="submit"
-            className="w-full md:w-64 mt-3 bg-primary transition duration-300 ease-in-out hover:filter hover:brightness-110 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Salvar
-          </button>
-        </form>
-      </section>
-    </div>
+              <FormErrorMessage>
+                {errors.image && errors.image.message}
+              </FormErrorMessage>
+            </FormControl>
+          </Box>
+        </Flex>
+        <Button
+          type="submit"
+          mt={6}
+          px={8}
+          bgGradient="linear(to-br, #735EF3, #998FF0)"
+          color="white"
+          _hover={{ bgGradient: "linear(to-br, #4432B0, #998FF0)" }}
+          w={{ base: "full", md: "64" }}
+        >
+          Salvar
+        </Button>
+      </Box>
+    </Container>
   );
 };
 

@@ -33,6 +33,10 @@ const dropdownLinks = [
     name: "Fórum",
     path: "/forum",
   },
+  {
+    name: "Startups",
+    path: "/startups",
+  },
 ];
 
 export default function Navbar() {
@@ -52,7 +56,7 @@ export default function Navbar() {
             h={100}
             alt="Logo"
             onClick={() => (window.location.href = "/")}
-            _hover={{ opacity: 0.8, cursor: 'pointer' }}
+            _hover={{ opacity: 0.8, cursor: "pointer" }}
           />
 
           <HStack spacing={8} alignItems="center">
@@ -69,7 +73,9 @@ export default function Navbar() {
               <Menu autoSelect={false} isLazy>
                 {({ isOpen, onClose }) => (
                   <>
-                    <MenuButton _hover={{ color: "blue.400" }}>
+                    <MenuButton
+                      _hover={{ color: "#5B47D1", textDecoration: "underline" }}
+                    >
                       <Flex alignItems="center">
                         <Text>Comunidade</Text>
                         <Icon
@@ -163,8 +169,8 @@ const NavLink = ({ name, path, onClose }: NavLinkProps) => {
       href={path}
       lineHeight="inherit"
       _hover={{
-        textDecoration: "none",
-        color: useColorModeValue("##735EF3", "##735EF3"),
+        textDecoration: "underline",
+        color: useColorModeValue("#735EF3", "#735EF3"),
       }}
       onClick={() => onClose()}
     >
@@ -184,7 +190,7 @@ const MenuLink = ({ name, path, onClose }: MenuLinkProps) => {
     <Link href={path} onClick={() => onClose()}>
       <MenuItem
         _hover={{
-          color: "blue.400",
+          color: "#5B47D1",
           bg: useColorModeValue("gray.200", "gray.700"),
         }}
       >
