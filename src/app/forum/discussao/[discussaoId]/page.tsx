@@ -4,6 +4,9 @@ import { useEffect, useCallback, useState } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { DiscussionService } from "@/services/DiscussaoService";
 import Title from "@/components/Title";
+import { Container } from "@chakra-ui/react";
+import PulseCards from "@/components/Loading/PulseCards";
+import OfferCard from "@/components/Cards/OfferCard";
 
 type Params = {
   discussaoId: number;
@@ -78,9 +81,16 @@ export default function Page({ params }: PageProps) {
   };
 
   return (
-    <section className="px-4">
+    <Container maxW="6xl" px={{ base: 6 }} py={10}>
+      <OfferCard
+        title="Ferramentas StartHub"
+        subTitle="Utilize as ferramentas da plataforma para melhorar os resultados de sua startup"
+        features={["Inteligência Artificial", "Sugestões para seu projeto", "Realização de análises"]}
+        buttonTxt="Saiba Mais"
+        link='/ferramentas'
+      />
       {discussao ? (
-        <div>
+        <div className="mt-10">
           <Title>{discussao.title}</Title>
           <p>{discussao.context}</p>
           <form
@@ -123,8 +133,8 @@ export default function Page({ params }: PageProps) {
           </div>
         </div>
       ) : (
-        <div>Carregando...</div>
+        <PulseCards />
       )}
-    </section>
+    </Container>
   );
 }
