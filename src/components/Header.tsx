@@ -22,11 +22,9 @@ import {
 import { GiHamburgerMenu } from "react-icons/gi";
 import { AiOutlineClose } from "react-icons/ai";
 import { BiChevronDown } from "react-icons/bi";
+import { useSession, signOut } from "next-auth/react";
 
-const navLinks = [
-  { name: "Ferramentas", path: "/ferramentas" },
-  { name: "Planos", path: "#" },
-];
+const navLinks = [{ name: "Ferramentas", path: "/ferramentas" }];
 
 const dropdownLinks = [
   {
@@ -40,7 +38,16 @@ const dropdownLinks = [
 ];
 
 export default function Navbar() {
+  const { data: session } = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleAuthButtonClick = () => {
+    if (session?.user?.id) {
+      signOut({ callbackUrl: "/" });
+    } else {
+      window.location.href = "/login";
+    }
+  };
 
   return (
     <Box bg={useColorModeValue("white", "gray.800")} py={4}>
@@ -122,9 +129,9 @@ export default function Navbar() {
             size="md"
             rounded="md"
             display={{ base: "none", md: "block" }}
-            onClick={() => (window.location.href = "/login")}
+            onClick={handleAuthButtonClick}
           >
-            Acessar
+            {session?.user?.id ? "Sair" : "Acessar"}
           </Button>
           <IconButton
             size="md"
@@ -142,7 +149,7 @@ export default function Navbar() {
                 <NavLink key={index} {...link} onClose={onClose} />
               ))}
               <Text fontWeight="semibold" color="gray.500">
-                Community
+                Comunidade
               </Text>
               <Stack pl={2} spacing={1} mt={"0 !important"}>
                 {dropdownLinks.map((link, index) => (

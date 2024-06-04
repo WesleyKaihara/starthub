@@ -15,8 +15,11 @@ import {
   useColorModeValue,
   FormErrorMessage,
   Text,
+  Progress,
 } from "@chakra-ui/react";
-import React, { useRef } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface StartupData {
@@ -25,9 +28,17 @@ interface StartupData {
   image: File | null;
   previewImage: string | null;
   private: boolean;
+  userId: number | null;
 }
 
 const StartupForm: React.FC = () => {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/login?callbackUrl=/startups/cadastro");
+    },
+  });
+
   const {
     register,
     handleSubmit,
@@ -43,9 +54,11 @@ const StartupForm: React.FC = () => {
       image: null,
       previewImage: null,
       private: false,
+      userId: session?.user.id,
     },
   });
 
+  const [step, setStep] = useState(1);
   const previewImage = watch("previewImage");
   const descriptionLength = watch("description")?.length || 0;
 
@@ -70,6 +83,39 @@ const StartupForm: React.FC = () => {
     }
   };
 
+  const validateStep = () => {
+    if (step === 1 && !watch("name")) {
+      setError("name", {
+        type: "manual",
+        message: "Nome é obrigatório",
+      });
+      return false;
+    }
+
+    if (
+      step === 2 &&
+      (!watch("description") ||
+        descriptionLength < 50 ||
+        descriptionLength > 250)
+    ) {
+      setError("description", {
+        type: "manual",
+        message: "Descrição deve ter entre 50 e 250 caracteres",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const nextStep = () => {
+    if (validateStep()) {
+      setStep((prev) => prev + 1);
+    }
+  };
+
+  const prevStep = () => setStep((prev) => prev - 1);
+
   const onSubmit = async (data: StartupData) => {
     if (!data.image) {
       setError("image", {
@@ -79,11 +125,17 @@ const StartupForm: React.FC = () => {
       return;
     }
 
+    if (!session?.user.id) {
+      console.error("User ID is undefined");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("description", data.description);
     formData.append("file", data.image);
-    formData.append("private", "false");
+    formData.append("private", data.private.toString());
+    formData.append("userId", session.user.id.toString());
 
     try {
       await ProjectService.cadastrarProjeto(formData);
@@ -102,6 +154,8 @@ const StartupForm: React.FC = () => {
   return (
     <Container maxW="6xl" py={5}>
       <Title>Cadastrar uma Startup</Title>
+      <Progress value={(step / 3) * 100} mb={6} colorScheme="purple" />
+
       <Box
         as="form"
         onSubmit={handleSubmit(onSubmit)}
@@ -109,9 +163,10 @@ const StartupForm: React.FC = () => {
         bg={useColorModeValue("gray.100", "gray.700")}
         shadow="lg"
         rounded="lg"
+        minH="500px"
       >
-        <Flex direction={{ base: "column", md: "row" }} gap={4}>
-          <Box flex="1">
+        {step === 1 && (
+          <Box>
             <FormControl id="name" mb={6} isInvalid={!!errors.name}>
               <FormLabel fontSize="xl" fontWeight="bold">
                 Nome
@@ -126,11 +181,26 @@ const StartupForm: React.FC = () => {
                   },
                 })}
                 placeholder="Informe o nome do seu produto (Pode ser alterado posteriormente)"
+                width="full" // Para ocupar todo o espaço disponível
               />
               <FormErrorMessage>
                 {errors.name && errors.name.message}
               </FormErrorMessage>
             </FormControl>
+            <Button
+              onClick={nextStep}
+              mt={6}
+              bgGradient="linear(to-br, #735EF3, #998FF0)"
+              color="white"
+              _hover={{ bgGradient: "linear(to-br, #4432B0, #998FF0)" }}
+            >
+              Próximo
+            </Button>
+          </Box>
+        )}
+
+        {step === 2 && (
+          <Box>
             <FormControl
               id="description"
               mb={6}
@@ -163,15 +233,33 @@ const StartupForm: React.FC = () => {
                 {errors.description && errors.description.message}
               </FormErrorMessage>
             </FormControl>
+            <Flex justifyContent="space-between">
+              <Button
+                onClick={prevStep}
+                mt={6}
+                bgGradient="linear(to-br, #735EF3, #998FF0)"
+                color="white"
+                _hover={{ bgGradient: "linear(to-br, #4432B0, #998FF0)" }}
+              >
+                Anterior
+              </Button>
+              <Button
+                onClick={nextStep}
+                mt={6}
+                bgGradient="linear(to-br, #735EF3, #998FF0)"
+                color="white"
+                _hover={{ bgGradient: "linear(to-br, #4432B0, #998FF0)" }}
+              >
+                Próximo
+              </Button>
+            </Flex>
           </Box>
-          <Box
-            flex="1"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
+        )}
+
+        {step === 3 && (
+          <Box>
             <FormControl id="image" isInvalid={!!errors.image}>
-              <Box
+              <Flex
                 position="relative"
                 w="96"
                 h="96"
@@ -180,22 +268,24 @@ const StartupForm: React.FC = () => {
                 borderWidth={1}
                 borderRadius="lg"
                 overflow="hidden"
+                align="center"
+                justify="center" // Centraliza vertical e horizontalmente
               >
                 {previewImage ? (
                   <Image
                     src={previewImage}
                     alt="Imagem da Startup"
                     objectFit="cover"
-                    w="full"
-                    h="full"
+                    maxW="full"
+                    maxH="full"
                   />
                 ) : (
                   <Image
                     src="/logo-starthub.png"
                     alt="Upload Icon"
                     objectFit="cover"
-                    w="full"
-                    h="full"
+                    maxW="full"
+                    maxH="full"
                   />
                 )}
                 <Box
@@ -210,7 +300,7 @@ const StartupForm: React.FC = () => {
                 >
                   Tamanho recomendado: 300x300
                 </Box>
-              </Box>
+              </Flex>
               <Input
                 type="file"
                 accept="image/*"
@@ -222,19 +312,28 @@ const StartupForm: React.FC = () => {
                 {errors.image && errors.image.message}
               </FormErrorMessage>
             </FormControl>
+            <Flex justifyContent="space-between">
+              <Button
+                onClick={prevStep}
+                mt={6}
+                bgGradient="linear(to-br, #735EF3, #998FF0)"
+                color="white"
+                _hover={{ bgGradient: "linear(to-br, #4432B0, #998FF0)" }}
+              >
+                Anterior
+              </Button>
+              <Button
+                type="submit"
+                mt={6}
+                bgGradient="linear(to-br, #735EF3, #998FF0)"
+                color="white"
+                _hover={{ bgGradient: "linear(to-br, #4432B0, #998FF0)" }}
+              >
+                Salvar
+              </Button>
+            </Flex>
           </Box>
-        </Flex>
-        <Button
-          type="submit"
-          mt={6}
-          px={8}
-          bgGradient="linear(to-br, #735EF3, #998FF0)"
-          color="white"
-          _hover={{ bgGradient: "linear(to-br, #4432B0, #998FF0)" }}
-          w={{ base: "full", md: "64" }}
-        >
-          Salvar
-        </Button>
+        )}
       </Box>
     </Container>
   );

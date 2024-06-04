@@ -5,20 +5,29 @@ import { ProjectService } from "@/services/ProjectService";
 import { useEffect, useState, useCallback } from "react";
 import CardProjeto from "@/components/CardProjeto";
 import Title from "@/components/Title";
-import Banner from "@/components/Banner";
-import { Container } from "@chakra-ui/react";
+import {
+  Container,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Text,
+} from "@chakra-ui/react";
 import PulseCards from "@/components/Loading/PulseCards";
-import OfferCard from '@/components/Cards/OfferCard';
+import OfferCard from "@/components/Cards/OfferCard";
+import { SearchIcon } from "@chakra-ui/icons";
 
 export default function StartupsPage() {
   const [projetos, setProjetos] = useState<Projeto[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [filteredProjetos, setFilteredProjetos] = useState<Projeto[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const fetchProjetos = useCallback(async () => {
     try {
-      setLoading(true);
       const { data: projetos } = await ProjectService.listarProjetos();
       setProjetos(projetos);
+      setFilteredProjetos(projetos); // Initially display all projects
+      console.log(projetos);
     } catch (error) {
       console.error("Erro ao buscar projetos:", error);
     } finally {
@@ -34,21 +43,48 @@ export default function StartupsPage() {
     window.location.href = `/startups/${projetoId}`;
   };
 
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+    setFilteredProjetos(
+      projetos.filter(
+        (projeto) =>
+          projeto.name.toLowerCase().includes(query) ||
+          projeto.description.toLowerCase().includes(query)
+      )
+    );
+  };
+
   return (
     <Container maxW="6xl" py={5}>
       <OfferCard
-        title="Adicionar uma Startup"
+        title="Minhas Startups"
         subTitle="Salve as informações da sua startup para usar os serviços da plataforma"
         features={["Análises mais precisas", "Reutilização simplificada"]}
-        buttonTxt="Adicionar minha startup"
-        link='/startups/cadastro'
+        buttonTxt="Adicionar uma startup"
+        link="/startups/cadastro"
+        secondLink=''
+        secondButtonTxt='Minhas Startups'
       />
-      {!loading ? (
+      {loading ? (
+        <PulseCards />
+      ) : (
         <section className="my-10">
           <Title>Startups</Title>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
-            {projetos.length > 0 ? (
-              projetos.map((projeto) => (
+          <InputGroup my={5}>
+            <InputLeftElement pointerEvents="none">
+              <SearchIcon color="gray.300" />
+            </InputLeftElement>
+            <Input
+              type="text"
+              placeholder="Buscar por nome ou descrição"
+              value={searchQuery}
+              onChange={handleSearch}
+            />
+          </InputGroup>
+          {filteredProjetos.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
+              {filteredProjetos.map((projeto) => (
                 <CardProjeto
                   key={projeto.id}
                   imageSrc={projeto.image}
@@ -58,19 +94,14 @@ export default function StartupsPage() {
                   buttonOnClick={() => handleButtonClick(projeto.id)}
                   cardOnClick={() => handleButtonClick(projeto.id)}
                 />
-              ))
-            ) : (
-              <>
-                <PulseCards />
-                <PulseCards />
-                <PulseCards />
-                <PulseCards />
-              </>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <Text fontSize="xl" color="gray.500" textAlign="center" mt={10}>
+              Nenhuma startup encontrada.
+            </Text>
+          )}
         </section>
-      ) : (
-        <PulseCards />
       )}
     </Container>
   );

@@ -1,8 +1,10 @@
 "use client";
 
+import OfferCard from "@/components/Cards/OfferCard";
 import Title from "@/components/Title";
 import { DiscussionService } from "@/services/DiscussaoService";
 import { ProjectService } from "@/services/ProjectService";
+import { Container, Divider } from "@chakra-ui/react";
 import Link from "next/link";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 
@@ -72,9 +74,20 @@ export default function Page({ params }: PageProps): ReactNode {
   };
 
   return (
-    <main className="px-4">
+    <Container maxW="6xl" px={{ base: 6 }} py={10}>
+      <OfferCard
+        title="Ferramentas StartHub"
+        subTitle="Utilize as ferramentas da plataforma para melhorar os resultados de sua startup"
+        features={[
+          "Inteligência Artificial",
+          "Sugestões para seu projeto",
+          "Realização de análises",
+        ]}
+        buttonTxt="Saiba Mais"
+        link="/ferramentas"
+      />
       {projeto ? (
-        <div>
+        <div className="mt-10">
           <div className="flex flex-col md:flex-row items-center md:items-start">
             <img
               src={projeto.image}
@@ -134,6 +147,7 @@ export default function Page({ params }: PageProps): ReactNode {
               </div>
             </form>
 
+            <Divider className='my-8'/>
             {discussions.length > 0 && (
               <div className="mt-6 border-t pt-6">
                 <ul>
@@ -157,6 +171,6 @@ export default function Page({ params }: PageProps): ReactNode {
       ) : (
         ""
       )}
-    </main>
+    </Container>
   );
 }

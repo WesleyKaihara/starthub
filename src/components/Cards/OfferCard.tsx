@@ -16,6 +16,8 @@ interface OfferCardProps {
   features: string[];
   buttonTxt: string;
   link: string;
+  secondLink?: string;
+  secondButtonTxt?: string;
 }
 
 const OfferCard: React.FC<OfferCardProps> = ({
@@ -24,6 +26,8 @@ const OfferCard: React.FC<OfferCardProps> = ({
   features,
   buttonTxt,
   link,
+  secondLink,
+  secondButtonTxt,
 }) => {
   return (
     <Flex
@@ -49,25 +53,47 @@ const OfferCard: React.FC<OfferCardProps> = ({
             </ListItem>
           ))}
         </List>
-        <Link
-          display="inline-flex"
-          alignItems="center"
-          justifyContent="center"
-          fontSize="md"
-          fontWeight="500"
-          p={3}
-          lineHeight={1.2}
-          h={10}
-          w="max-content"
-          rounded="md"
-          textDecoration="none"
-          color="white"
-          bg="blackAlpha.400"
-          shadow="lg"
-          href={link}
-        >
-          {buttonTxt}
-        </Link>
+        <Stack direction={{ base: "column", md: "row" }}>
+          <Link
+            display="inline-flex"
+            alignItems="center"
+            justifyContent="center"
+            fontSize="md"
+            fontWeight="500"
+            p={3}
+            lineHeight={1.2}
+            h={10}
+            w="max-content"
+            rounded="md"
+            textDecoration="none"
+            color="white"
+            bg="blackAlpha.400"
+            shadow="lg"
+            href={link}
+          >
+            {buttonTxt}
+          </Link>
+          <Link
+            display="inline-flex"
+            alignItems="center"
+            justifyContent="center"
+            fontSize="md"
+            fontWeight="500"
+            p={3}
+            lineHeight={1.2}
+            h={10}
+            w="max-content"
+            rounded="md"
+            textDecoration="none"
+            color="blackAlpha.700"
+            bg="#D1CDF7"
+            shadow="lg"
+            href={secondLink || "#"}
+          >
+            {" "}
+            {secondButtonTxt}
+          </Link>
+        </Stack>
       </Stack>
     </Flex>
   );
