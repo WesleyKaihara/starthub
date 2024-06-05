@@ -1,11 +1,12 @@
 "use client";
 
+import HorizontalCard from "@/components/Cards/HorizontalCard";
 import OfferCard from "@/components/Cards/OfferCard";
+import PulseCards from "@/components/Loading/PulseCards";
 import Title from "@/components/Title";
 import { DiscussionService } from "@/services/DiscussaoService";
 import { ProjectService } from "@/services/ProjectService";
-import { Container, Divider } from "@chakra-ui/react";
-import Link from "next/link";
+import { Container, Divider, Flex } from "@chakra-ui/react";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 
 type Params = {
@@ -19,6 +20,8 @@ type PageProps = {
 export default function Page({ params }: PageProps): ReactNode {
   const [projeto, setProjeto] = useState<any>(null);
   const [discussions, setDiscussions] = useState<any>([]);
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+  const [visibleDiscussions, setVisibleDiscussions] = useState<number>(3);
   const [formData, setFormData] = useState({
     title: "",
     context: "",
@@ -53,6 +56,21 @@ export default function Page({ params }: PageProps): ReactNode {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const errors: { [key: string]: string } = {};
+
+    if (formData.title.length < 10) {
+      errors.title = "O título deve ter pelo menos 10 caracteres.";
+    }
+
+    if (formData.context.length < 40) {
+      errors.context = "O contexto deve ter pelo menos 40 caracteres.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
     try {
       const { data } = await DiscussionService.iniciarDiscussao(
         formData.title,
@@ -65,6 +83,10 @@ export default function Page({ params }: PageProps): ReactNode {
     } catch (error) {
       console.error("Erro ao buscar discussões para o projeto:", error);
     }
+  };
+
+  const loadMoreDiscussions = () => {
+    setVisibleDiscussions((prev) => prev + 3);
   };
 
   const handleChange = (
@@ -116,9 +138,15 @@ export default function Page({ params }: PageProps): ReactNode {
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
+                  placeholder="Digite o título (mínimo de 10 caracteres)"
                   className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-400"
                   required
                 />
+                {formErrors.title && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {formErrors.title}
+                  </p>
+                )}
               </div>
               <div className="mb-4">
                 <label
@@ -133,10 +161,17 @@ export default function Page({ params }: PageProps): ReactNode {
                   value={formData.context}
                   onChange={handleChange}
                   rows={4}
+                  placeholder="Descreva o contexto (mínimo de 40 caracteres)"
                   className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-400"
                   required
                 ></textarea>
+                {formErrors.context && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {formErrors.context}
+                  </p>
+                )}
               </div>
+
               <div>
                 <button
                   type="submit"
@@ -147,29 +182,38 @@ export default function Page({ params }: PageProps): ReactNode {
               </div>
             </form>
 
-            <Divider className='my-8'/>
-            {discussions.length > 0 && (
-              <div className="mt-6 border-t pt-6">
-                <ul>
-                  {discussions.map((discussion: any) => (
-                    <li className="mt-4" key={discussion.id}>
-                      <Link href={`/forum/discussao/${discussion.id}`}>
-                        <div className="border rounded-md p-4 transition duration-300 ease-in-out hover:bg-gray-200 hover:text-gray-900 cursor-pointer">
-                          <h3 className="text-lg font-semibold">
-                            {discussion.title}
-                          </h3>
-                          <p>{discussion.context}</p>
-                        </div>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <Divider className="my-8" />
+            <Flex direction="column" flexGrow={1}>
+              {discussions.length === 0 ? (
+                <PulseCards />
+              ) : (
+                discussions
+                  .slice(0, visibleDiscussions)
+                  .map((discussion: any) => (
+                    <HorizontalCard
+                      key={discussion.id}
+                      id={discussion.id}
+                      title={discussion.title}
+                      description={discussion.context}
+                      image="/logo-starthub.png"
+                      link={`/forum/discussao/${discussion.id}`}
+                    />
+                  ))
+              )}
+            </Flex>
+
+            {visibleDiscussions < discussions.length && (
+              <button
+                onClick={loadMoreDiscussions}
+                className="bg-primary text-white font-bold py-2 px-4 rounded-full mt-4"
+              >
+                Carregar Mais
+              </button>
             )}
           </section>
         </div>
       ) : (
-        ""
+        <PulseCards bigCard={true}/>
       )}
     </Container>
   );

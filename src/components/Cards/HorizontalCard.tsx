@@ -4,7 +4,6 @@ import {
   HStack,
   VStack,
   Text,
-  Tag,
   Link,
   Image,
   useColorModeValue,
@@ -29,17 +28,16 @@ const HorizontalCard: React.FC<CardProps> = ({
   const toggleOpen = () => setIsOpen(!isOpen);
 
   return (
-    <VStack spacing={4} mt={2}>
-      <chakra.div onClick={toggleOpen} key={id}>
+    <VStack mt={2}>
+      <chakra.div onClick={toggleOpen} key={id} width="100%">
         <HStack
           p={4}
           bg={useColorModeValue("white", "gray.800")}
           rounded="xl"
           borderWidth="1px"
           borderColor={useColorModeValue("gray.100", "gray.700")}
-          w="100%"
-          h="100%"
           textAlign="left"
+          w="full"
           align="start"
           spacing={4}
           cursor="pointer"

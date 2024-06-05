@@ -1,6 +1,12 @@
 import { Box, HStack, Skeleton, Stack } from "@chakra-ui/react";
 
-const PulseCards = () => {
+type PulseCardsProps = {
+  bigCard?: boolean;
+};
+
+const PulseCards: React.FC<PulseCardsProps>  = ({
+  bigCard = false
+}) => {
   return (
     <Stack spacing={3} mt="3">
       {Array.from(Array(3).keys()).map((id) => {
@@ -14,6 +20,7 @@ const PulseCards = () => {
             rounded="md"
             borderRadius="5px"
           >
+            {bigCard && id === 0 ? <Skeleton height="15rem" borderRadius="5px 5px 0 0" width="100%" /> : ''}
             <Stack justifyContent="space-between" mt={2} p={5}>
               <Box width="100%">
                 <Box pl="2.5em">

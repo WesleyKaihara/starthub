@@ -18,50 +18,35 @@ const Footer = () => {
         justifyContent="space-between"
         direction={{ base: 'column', md: 'row' }}
       >
-        <Box maxW="300px">
-          <Link href="https://templateskart.com" isExternal>
+        <Box maxW="400px">
+          <Link href="/">
             <Image w="100px" src="/fullname-logo.png" alt="TemplatesKart" />
           </Link>
           <Text mt={2} color="gray.500" fontSize="md">
-            Build fully functional accessible web applications faster than ever
+            Mais facilidade e organização durante o processo de idealização e validação de sua Startup
           </Text>
         </Box>
         <HStack
-          spacing={4}
+          spacing={12}
           display={{ base: 'none', sm: 'flex' }}
           justifyContent={{ sm: 'space-between', md: 'normal' }}
         >
-          <VStack spacing={4} alignItems="flex-start">
+          <VStack spacing={3} alignItems="flex-start">
             <Text fontSize="md" fontWeight="bold">
-              About
+              Comunidade
             </Text>
             <VStack spacing={2} alignItems="flex-start" color="gray.500">
-              <CustomLink>Contrinute</CustomLink>
-              <CustomLink>Media assets</CustomLink>
-              <CustomLink>Changelog</CustomLink>
-              <CustomLink>Releases</CustomLink>
+              <CustomLink href="/forum">Fórum</CustomLink>
+              <CustomLink href="/startups">Startups</CustomLink>
             </VStack>
           </VStack>
-          <VStack spacing={4} alignItems="flex-start">
+          <VStack spacing={3} alignItems="flex-start">
             <Text fontSize="md" fontWeight="bold">
-              Community
+              Startups
             </Text>
             <VStack spacing={2} alignItems="flex-start" color="gray.500">
-              <CustomLink>Chat on Discord</CustomLink>
-              <CustomLink>Follow on Twitter</CustomLink>
-              <CustomLink>Follow on Github</CustomLink>
-              <CustomLink>Github discussions</CustomLink>
-            </VStack>
-          </VStack>
-          <VStack spacing={4} alignItems="flex-start">
-            <Text fontSize="md" fontWeight="bold">
-              Project
-            </Text>
-            <VStack spacing={2} alignItems="flex-start" color="gray.500">
-              <CustomLink>TemplatesKart</CustomLink>
-              <CustomLink>Documentation</CustomLink>
-              <CustomLink>Github organization</CustomLink>
-              <CustomLink>npm organization</CustomLink>
+              <CustomLink href="/startups/cadastro">Cadastrar</CustomLink>
+              <CustomLink href="/minhas-startups">Minhas Startups</CustomLink>
             </VStack>
           </VStack>
         </HStack>
@@ -74,7 +59,7 @@ const Footer = () => {
 
 const CustomLink = ({ children, ...props }: LinkProps) => {
   return (
-    <Link href="#" fontSize="sm" _hover={{ textDecoration: 'underline' }} {...props}>
+    <Link fontSize="sm" _hover={{ textDecoration: 'underline' }} {...props}>
       {children}
     </Link>
   );

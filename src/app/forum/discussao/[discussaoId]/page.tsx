@@ -20,7 +20,10 @@ export default function Page({ params }: PageProps) {
   const [discussao, setDiscussao] = useState<any>(null);
   const [interactions, setInteractions] = useState<any>([]);
   const [newInteraction, setNewInteraction] = useState<string>("");
+  const [userColors, setUserColors] = useState<{ [key: number]: string }>({});
   const { data: session } = useSession();
+  const [visibleInteractions, setVisibleInteractions] = useState<number>(3);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const fetchDiscussion = useCallback(async () => {
     try {
@@ -44,11 +47,21 @@ export default function Page({ params }: PageProps) {
     }
   }, [params.discussaoId]);
 
+  useEffect(() => {
+    fetchDiscussion();
+    fetchInteractions();
+  }, [fetchInteractions, fetchDiscussion]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!session) {
       signIn();
+      return;
+    }
+
+    if (newInteraction.length < 10) {
+      setValidationError("A interação deve ter pelo menos 10 caracteres.");
       return;
     }
 
@@ -60,24 +73,25 @@ export default function Page({ params }: PageProps) {
       );
       setNewInteraction("");
       fetchInteractions();
+      setValidationError(null);
     } catch (error) {
       console.error(error);
     }
   };
 
-  useEffect(() => {
-    fetchDiscussion();
-    fetchInteractions();
-  }, [fetchInteractions, fetchDiscussion]);
-
-  const userColors: { [key: number]: string } = {};
-
   const getUserColor = (userId: number) => {
     if (!userColors[userId]) {
-      userColors[userId] =
-        "#" + Math.floor(Math.random() * 16777215).toString(16);
+      const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+      setUserColors((prevState) => ({
+        ...prevState,
+        [userId]: color,
+      }));
     }
     return userColors[userId];
+  };
+
+  const loadMoreInteractions = () => {
+    setVisibleInteractions((prev) => prev + 3);
   };
 
   return (
@@ -85,9 +99,13 @@ export default function Page({ params }: PageProps) {
       <OfferCard
         title="Ferramentas StartHub"
         subTitle="Utilize as ferramentas da plataforma para melhorar os resultados de sua startup"
-        features={["Inteligência Artificial", "Sugestões para seu projeto", "Realização de análises"]}
+        features={[
+          "Inteligência Artificial",
+          "Sugestões para seu projeto",
+          "Realização de análises",
+        ]}
         buttonTxt="Saiba Mais"
-        link='/ferramentas'
+        link="/ferramentas"
       />
       {discussao ? (
         <div className="mt-10">
@@ -111,26 +129,41 @@ export default function Page({ params }: PageProps) {
               {session ? "Interagir" : "Faça login para interagir"}
             </button>
           </form>
+          {validationError && (
+            <p className="text-red-500 mt-1">{validationError}</p>
+          )}
           <div className="mt-4">
-            {interactions.map((interaction: any) => (
-              <div
-                key={interaction.id}
-                className="border border-gray-200 rounded-md p-4 mb-4 flex items-start"
-              >
+            {interactions
+              .slice(0, visibleInteractions)
+              .map((interaction: any) => (
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center mr-2"
-                  style={{ backgroundColor: getUserColor(interaction.user.id) }}
+                  key={interaction.id}
+                  className="border border-gray-200 rounded-md p-4 mb-4 flex items-start"
                 >
-                  <span className="text-white">
-                    {interaction.user.name.charAt(0).toUpperCase()}
-                  </span>
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center mr-2"
+                    style={{
+                      backgroundColor: getUserColor(interaction.user.id),
+                    }}
+                  >
+                    <span className="text-white">
+                      {interaction.user.name.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="flex-1">
+                    <p>{interaction.message}</p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p>{interaction.message}</p>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
+          {visibleInteractions < interactions.length && (
+            <button
+              onClick={loadMoreInteractions}
+              className="bg-primary text-white font-bold py-2 px-4 rounded-full mt-4"
+            >
+              Carregar Mais
+            </button>
+          )}
         </div>
       ) : (
         <PulseCards />

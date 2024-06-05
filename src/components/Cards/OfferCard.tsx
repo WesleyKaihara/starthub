@@ -73,26 +73,28 @@ const OfferCard: React.FC<OfferCardProps> = ({
           >
             {buttonTxt}
           </Link>
-          <Link
-            display="inline-flex"
-            alignItems="center"
-            justifyContent="center"
-            fontSize="md"
-            fontWeight="500"
-            p={3}
-            lineHeight={1.2}
-            h={10}
-            w="max-content"
-            rounded="md"
-            textDecoration="none"
-            color="blackAlpha.700"
-            bg="#D1CDF7"
-            shadow="lg"
-            href={secondLink || "#"}
-          >
-            {" "}
-            {secondButtonTxt}
-          </Link>
+          {secondButtonTxt && (
+            <Link
+              display="inline-flex"
+              alignItems="center"
+              justifyContent="center"
+              fontSize="md"
+              fontWeight="500"
+              p={3}
+              lineHeight={1.2}
+              h={10}
+              w="max-content"
+              rounded="md"
+              textDecoration="none"
+              color="blackAlpha.700"
+              bg="#D1CDF7"
+              shadow="lg"
+              href={secondLink || "#"}
+            >
+              {" "}
+              {secondButtonTxt}
+            </Link>
+          )}
         </Stack>
       </Stack>
     </Flex>

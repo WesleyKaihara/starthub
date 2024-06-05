@@ -60,7 +60,7 @@ export default function StartupsPage() {
       <OfferCard
         title="Minhas Startups"
         subTitle="Salve as informações da sua startup para usar os serviços da plataforma"
-        features={["Análises mais precisas", "Reutilização simplificada"]}
+        features={["Análises mais precisas", "Utilização simplificada"]}
         buttonTxt="Adicionar uma startup"
         link="/startups/cadastro"
         secondLink=''
