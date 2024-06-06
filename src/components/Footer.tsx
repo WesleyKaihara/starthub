@@ -7,8 +7,8 @@ import {
   Divider,
   Image,
   Text,
-  LinkProps
-} from '@chakra-ui/react';
+  LinkProps,
+} from "@chakra-ui/react";
 
 const Footer = () => {
   return (
@@ -16,20 +16,22 @@ const Footer = () => {
       <Stack
         spacing={{ base: 8, md: 0 }}
         justifyContent="space-between"
-        direction={{ base: 'column', md: 'row' }}
+        direction={{ base: "column", md: "row" }}
       >
         <Box maxW="400px">
           <Link href="/">
             <Image w="100px" src="/fullname-logo.png" alt="TemplatesKart" />
           </Link>
           <Text mt={2} color="gray.500" fontSize="md">
-            Mais facilidade e organização durante o processo de idealização e validação de sua Startup
+            Mais facilidade e organização durante o processo de idealização e
+            validação de sua Startup
           </Text>
         </Box>
-        <HStack
-          spacing={12}
-          display={{ base: 'none', sm: 'flex' }}
-          justifyContent={{ sm: 'space-between', md: 'normal' }}
+        <Stack
+          spacing={{ base: 8, md: 12 }}
+          direction={{ base: "column", md: "row" }}
+          display="flex"
+          justifyContent={{ sm: "space-between", md: "normal" }}
         >
           <VStack spacing={3} alignItems="flex-start">
             <Text fontSize="md" fontWeight="bold">
@@ -49,7 +51,7 @@ const Footer = () => {
               <CustomLink href="/minhas-startups">Minhas Startups</CustomLink>
             </VStack>
           </VStack>
-        </HStack>
+        </Stack>
       </Stack>
 
       <Divider my={4} />
@@ -59,7 +61,7 @@ const Footer = () => {
 
 const CustomLink = ({ children, ...props }: LinkProps) => {
   return (
-    <Link fontSize="sm" _hover={{ textDecoration: 'underline' }} {...props}>
+    <Link fontSize="sm" _hover={{ textDecoration: "underline" }} {...props}>
       {children}
     </Link>
   );

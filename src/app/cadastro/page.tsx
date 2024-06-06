@@ -3,18 +3,43 @@
 import React, { useState, FormEvent, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { UserService } from '@/services/UserService';
+import { UserService } from "@/services/UserService";
+import {
+  Container,
+  Box,
+  Heading,
+  Text,
+  Input,
+  Button,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Image,
+  VStack,
+  InputGroup,
+  InputRightElement,
+  IconButton,
+} from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 const SignIn: React.FC = () => {
   const [nome, setNome] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
+
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     setLoading(true);
     try {
       await UserService.cadastrarUsuario({
@@ -31,20 +56,51 @@ const SignIn: React.FC = () => {
 
       if (result?.error) {
         throw new Error("Ocorreu um problema com o servidor. Tente novamente");
-        
       } else {
         window.location.href = "/";
       }
     } catch (error) {
       setErrorMessage("Ocorreu um erro ao cadastrar usuário. Tente novamente");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
-  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setNome(e.target.value);
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (nome.trim().length <= 5) {
+      newErrors.nome = "Nome deve ser composto por mais de 5 palavras.";
+    }
+
+    const nomeParts = nome.split(" ");
+    if (nomeParts.length < 2 || nomeParts.some((part) => part.length < 2)) {
+      setErrorMessage("Por favor, insira seu nome completo.");
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      newErrors.email = "E-mail inválido.";
+    }
+
+    if (!password) {
+      newErrors.password = "Senha é obrigatória.";
+    }
+
+    if (password !== confirmPassword) {
+      newErrors.confirmPassword = "As senhas não coincidem.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
+
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+    setNome(value);
+  };
+  
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -54,104 +110,168 @@ const SignIn: React.FC = () => {
     setPassword(e.target.value);
   };
 
+  const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
+  };
+
   const handleSignUpRedirect = () => {
     router.push("/login");
   };
 
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleToggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   return (
-    <section
-      className="min-h-screen flex items-center justify-center bg-gray-50"
-      style={{
-        backgroundImage: "url('/background/purple-animated-bg.svg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
+    <Container
+      minH="100vh"
+      minWidth="100vw"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      bg="gray.50"
+      backgroundImage="url('/background/purple-animated-bg.svg')"
+      backgroundSize="cover"
+      backgroundPosition="center"
+      backgroundRepeat="no-repeat"
     >
-      <div className="w-full max-w-md bg-white bg-opacity-90 rounded-lg shadow-md p-6 space-y-4">
-        <div className="flex flex-col items-center mb-6 text-2xl font-semibold text-gray-900">
-          <img className="w-12 h-12 mb-2" src="/logo-starthub.png" alt="logo" />
-          StartHub
-        </div>
-        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-center">
+      <Box
+        w="full"
+        maxW="md"
+        bg="white"
+        bgOpacity="0.9"
+        borderRadius="lg"
+        shadow="md"
+        p={6}
+      >
+        <VStack spacing={4} mb={6} textAlign="center">
+          <Image src="/logo-starthub.png" alt="logo" w={12} h={12} mb={2} />
+          <Heading as="h1" fontSize="2xl" fontWeight="bold" color="gray.900">
+            StartHub
+          </Heading>
+        </VStack>
+        <Heading
+          as="h2"
+          fontSize="xl"
+          fontWeight="bold"
+          color="gray.900"
+          textAlign="center"
+          mb={4}
+        >
           Iniciar uma conta
-        </h1>
+        </Heading>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-900"
+          <VStack spacing={4}>
+            <FormControl id="nome" isInvalid={!!errors.nome}>
+              <FormLabel>Nome Completo</FormLabel>
+              <Input
+                type="text"
+                placeholder="Nome Sobrenome"
+                value={nome}
+                onChange={handleNameChange}
+                required
+              />
+              {errors.nome && (
+                <FormErrorMessage>{errors.nome}</FormErrorMessage>
+              )}
+            </FormControl>
+            <FormControl id="email" isInvalid={!!errors.email}>
+              <FormLabel>E-mail</FormLabel>
+              <Input
+                type="email"
+                placeholder="nome@email.com"
+                value={email}
+                onChange={handleEmailChange}
+                required
+              />
+              {errors.email && (
+                <FormErrorMessage>{errors.email}</FormErrorMessage>
+              )}
+            </FormControl>
+            <FormControl id="password" isInvalid={!!errors.password}>
+              <FormLabel>Senha</FormLabel>
+              <InputGroup>
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  required
+                />
+                <InputRightElement width="4.5rem">
+                  <IconButton
+                    h="1.75rem"
+                    size="sm"
+                    variant="ghost"
+                    aria-label={
+                      showPassword ? "Ocultar senha" : "Mostrar senha"
+                    }
+                    icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                    onClick={handleTogglePasswordVisibility}
+                  />
+                </InputRightElement>
+              </InputGroup>
+              {errors.password && (
+                <FormErrorMessage>{errors.password}</FormErrorMessage>
+              )}
+            </FormControl>
+            <FormControl
+              id="confirmPassword"
+              isInvalid={!!errors.confirmPassword}
             >
-              Nome Completo
-            </label>
-            <input
-              type="text"
-              name="nome"
-              id="email"
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              placeholder="Nome Sobrenome"
-              value={nome}
-              onChange={handleNameChange}
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-900"
+              <FormLabel>Confirmar Senha</FormLabel>
+              <InputGroup>
+                <Input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange}
+                  required
+                />
+                <InputRightElement width="4.5rem">
+                  <IconButton
+                    h="1.75rem"
+                    size="sm"
+                    variant="ghost"
+                    aria-label={
+                      showConfirmPassword ? "Ocultar senha" : "Mostrar senha"
+                    }
+                    icon={showConfirmPassword ? <ViewOffIcon /> : <ViewIcon />}
+                    onClick={handleToggleConfirmPasswordVisibility}
+                  />
+                </InputRightElement>
+              </InputGroup>
+              {errors.confirmPassword && (
+                <FormErrorMessage>{errors.confirmPassword}</FormErrorMessage>
+              )}
+            </FormControl>
+            <Button
+              type="submit"
+              colorScheme="purple"
+              w="full"
+              isLoading={loading}
             >
-              E-mail
-            </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              placeholder="nome@email.com"
-              value={email}
-              onChange={handleEmailChange}
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block mb-2 text-sm font-medium text-gray-900"
-            >
-              Senha
-            </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="••••••••"
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              value={password}
-              onChange={handlePasswordChange}
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2"
-            disabled={loading}
-          >
-            {loading? "Carregando...": "Cadastrar"}
-          </button>
-          {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
-          <p className="text-sm font-light text-gray-500">
-           Já possui uma conta?{" "}
-            <a
-              href="#"
-              className="font-medium text-primary-600 hover:underline"
-              onClick={handleSignUpRedirect}
-            >
-              Entrar
-            </a>
-          </p>
+              {loading ? "Carregando..." : "Cadastrar"}
+            </Button>
+            {errorMessage && <Text color="red.500">{errorMessage}</Text>}
+            <Text fontSize="sm" color="gray.500">
+              Já possui uma conta?{" "}
+              <Button
+                variant="link"
+                colorScheme="purple"
+                onClick={handleSignUpRedirect}
+              >
+                Entrar
+              </Button>
+            </Text>
+          </VStack>
         </form>
-      </div>
-    </section>
+      </Box>
+    </Container>
   );
 };
 

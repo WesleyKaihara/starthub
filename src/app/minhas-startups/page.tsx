@@ -1,7 +1,9 @@
 "use client";
 
-import DefaultCard from '@/components/Cards/DefaultCard';
+import DefaultCard from "@/components/Cards/DefaultCard";
+import OfferCard from "@/components/Cards/OfferCard";
 import Title from "@/components/Title";
+import { Container } from "@chakra-ui/react";
 
 const cardsData = [
   {
@@ -43,23 +45,32 @@ const cardsData = [
 
 export default async function Destaque() {
   return (
-    <main>
-      <section className="px-4 container mx-auto">
-        <Title>Nossos Serviços</Title>
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {cardsData.map((card, index) => (
-              <DefaultCard
-                key={index}
-                imageUrl={card.imageUrl}
-                title={card.title}
-                description={card.description}
-                href={card.href}
-              />
-            ))}
-          </div>
+    <Container maxW="6xl" py={5}>
+      <OfferCard
+        title="Ferramentas StartHub"
+        subTitle="Utilize as ferramentas da plataforma para melhorar os resultados de sua startup"
+        features={[
+          "Inteligência Artificial",
+          "Sugestões para seu projeto",
+          "Realização de análises",
+        ]}
+        buttonTxt="Saiba Mais"
+        link="/ferramentas"
+      />
+      <section className="mt-10">
+        <Title>Minhas Startups</Title>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+          {cardsData.map((card, index) => (
+            <DefaultCard
+              key={index}
+              imageUrl={card.imageUrl}
+              title={card.title}
+              description={card.description}
+              href={card.href}
+            />
+          ))}
         </div>
       </section>
-    </main>
+    </Container>
   );
 }

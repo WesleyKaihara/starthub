@@ -37,7 +37,10 @@ function Modal({ show, onClose, children }: ModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div ref={modalRef} className="bg-white p-6 rounded shadow-lg w-1/2">
+      <div
+        ref={modalRef}
+        className="bg-white p-6 rounded shadow-lg w-full max-w-lg mx-4 md:w-1/2"
+      >
         <button onClick={onClose} className="float-right text-black font-bold">
           X
         </button>

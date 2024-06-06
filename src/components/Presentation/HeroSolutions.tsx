@@ -93,10 +93,10 @@ const HeroSection = () => {
         <Stack direction={{ base: "column", md: "row" }}>
           <Stack direction="column" spacing={8} justifyContent="center">
             <chakra.h1
-              fontSize="5xl"
-              lineHeight={1}
+              fontSize={{ base: "3xl", md: "5xl" }}
+              lineHeight={1.2}
               fontWeight="bold"
-              textAlign="left"
+              textAlign={{ base: "center", sm: "left" }}
             >
               Utilização de
               <chakra.span
@@ -111,7 +111,7 @@ const HeroSection = () => {
             <Text
               color={useColorModeValue("gray.500", "gray.400")}
               fontSize="lg"
-              textAlign="left"
+              textAlign={{ base: "justify", sm: "left" }}
               fontWeight="400"
               maxW="950px"
             >

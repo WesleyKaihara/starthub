@@ -63,7 +63,7 @@ export default function StartupsPage() {
         features={["Análises mais precisas", "Utilização simplificada"]}
         buttonTxt="Adicionar uma startup"
         link="/startups/cadastro"
-        secondLink=''
+        secondLink='/minhas-startups'
         secondButtonTxt='Minhas Startups'
       />
       {loading ? (
