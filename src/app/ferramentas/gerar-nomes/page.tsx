@@ -5,6 +5,21 @@ import { redirect } from "next/navigation";
 import { ProjectService } from "@/services/ProjectService";
 import { Projeto } from "@/types/Projeto";
 import { AnalysisService } from "@/services/AnalysisService";
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  Progress,
+  Select,
+  Text,
+  Textarea,
+  VStack,
+} from "@chakra-ui/react";
 
 interface NameSuggestion {
   name: string;
@@ -18,7 +33,6 @@ const steps = [
 ];
 
 export default function Page(): ReactNode {
-  const [projetos, setProjetos] = useState<Projeto[]>([]);
   const [selectedProject, setSelectedProject] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [nameSuggestions, setNameSuggestions] = useState<NameSuggestion[]>([]);
@@ -30,27 +44,6 @@ export default function Page(): ReactNode {
       redirect("/login?callbackUrl=/ferramentas/gerar-nomes");
     },
   });
-
-  const fetchProjects = useCallback(async (userId: number) => {
-    try {
-      const { data } = await ProjectService.buscarProjetosUsuario(
-        Number(userId)
-      );
-      setProjetos(data);
-    } catch (error) {
-      console.error("Erro ao buscar projetos do usuário:", error);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (session?.user.id) {
-      fetchProjects(Number(session?.user.id));
-    }
-  }, [fetchProjects, session?.user.id]);
-
-  const handleSelectProject = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedProject(event.target.value);
-  };
 
   const [error, setError] = useState<string>("");
 
@@ -80,122 +73,149 @@ export default function Page(): ReactNode {
     setCurrentStep(2);
   };
 
+  const handleRestart = () => {
+    setSelectedProject("");
+    setNameSuggestions([]);
+    setCurrentStep(1);
+  };
+
   return (
-    <div className="flex flex-col items-center min-h-screen">
-      <div className="w-full md:w-3/4 mx-auto mb-4">
-        <div className="relative pt-1">
-          <div className="flex mb-2 items-center justify-between">
-            <div>
-              <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-primary-600 bg-primary-200">
+    <Container maxW="6xl" px={{ base: 6 }} py={10}>
+      <Flex direction="column" align="center" minH="100vh" w="full" p={4}>
+        <Box w="full" mx="auto" mb={4}>
+          <Box pt={1}>
+            <Flex mb={2} alignItems="center" justifyContent="space-between">
+              <Text
+                fontSize="xs"
+                fontWeight="semibold"
+                color="purple.600"
+                bg="purple.200"
+                py={1}
+                px={2}
+                rounded="full"
+              >
                 Passo {currentStep}/{steps.length}
-              </span>
-            </div>
-          </div>
-          <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-primary-200">
-            <div
-              style={{ width: `${(currentStep / steps.length) * 100}%` }}
-              className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primary-500 transition-width duration-500"
-            ></div>
-          </div>
-        </div>
-      </div>
+              </Text>
+            </Flex>
+            <Progress
+              value={(currentStep / steps.length) * 100}
+              size="xs"
+              colorScheme="purple"
+            />
+          </Box>
+        </Box>
 
-      <div className="w-full md:w-3/4 bg-gray-100 p-4 rounded-md min-h-[500px] flex flex-col justify-center items-center">
-        {currentStep === 1 && (
-          <div className="text-center">
-            <h2 className="text-lg font-semibold mb-4">
-              Bem-vindo ao nosso serviço de sugestões de nomes!
-            </h2>
-            <p className="text-gray-700 mb-6">
-              Nosso serviço utiliza inteligência artificial para ajudar você a
-              encontrar os melhores nomes para o seu projeto. Siga os passos
-              para selecionar seu projeto, descrever sua ideia e obter sugestões
-              de nomes criativas e relevantes.
-            </p>
-            <button
-              onClick={handleStart}
-              className="bg-primary-500 hover:bg-primary-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline"
-            >
-              Iniciar
-            </button>
-          </div>
-        )}
+        <Box
+          w="full"
+          bg="gray.100"
+          p={4}
+          rounded="md"
+          minH="500px"
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          {![1, 3].includes(currentStep) && (
+            <>
+              <Heading as="h1" size="lg" my={4}>
+                Serviço de Sugestões de Nomes
+              </Heading>
+              <Text color="gray.700" mb={6} textAlign="center">
+                Nosso serviço utiliza inteligência artificial para ajudar você a
+                encontrar os melhores nomes para o seu projeto. Siga os passos
+                para selecionar seu projeto, descrever sua ideia e obter
+                sugestões de nomes criativos e relevantes.
+              </Text>
+              <Divider mb={6} />
+            </>
+          )}
 
-        {currentStep === 2 && (
-          <form onSubmit={handleSubmit} className="w-full">
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="select"
-              >
-                Selecione uma opção (opcional):
-              </label>
-              <select
-                id="select"
-                className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:border-primary-400"
-                onChange={handleSelectProject}
-              >
-                <option value="">Selecionar projeto existente</option>
-                {projetos.map((projeto) => (
-                  <option key={projeto.id} value={projeto.description}>
-                    {projeto.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="message"
-              >
-                Descrição do projeto:
-              </label>
-              <textarea
-                id="message"
-                className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:border-primary-400"
-                rows={8}
-                value={selectedProject}
-                onChange={(event) => setSelectedProject(event.target.value)}
-              ></textarea>
-            </div>
-            {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                className={`bg-primary-500 hover:bg-primary-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline ${
-                  loading || selectedProject.trim().length < 15
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : ""
-                }`}
-                disabled={loading || selectedProject.trim().length < 15}
-              >
-                {loading ? "Processando..." : "Enviar"}
-              </button>
-            </div>
-          </form>
-        )}
+          {currentStep === 1 && (
+            <Box textAlign="center">
+              <Heading as="h2" size="lg" mb={4}>
+              Bem-vindo ao nosso serviço de sugestões de nomes
+              </Heading>
+              <Text color="gray.700" mb={6}>
+                Para começar, clique no botão abaixo e siga as instruções.
+              </Text>
+              <Button colorScheme="purple" onClick={handleStart}>
+                Iniciar
+              </Button>
+            </Box>
+          )}
 
-        {currentStep === 3 && (
-          <>
-            <h2 className="text-2xl font-semibold my-2">Sugestões de Nomes:</h2>
-            <div className="w-full">
-              {nameSuggestions.map((suggestion, index) => (
-                <div
-                  key={index}
-                  className="border border-primary-300 rounded-md p-6 mb-4"
+          {currentStep === 2 && (
+            <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+              <VStack spacing={4}>
+                <FormControl isRequired>
+                  <FormLabel>
+                    Descrição do projeto (mínimo 50 caracteres):
+                  </FormLabel>
+                  <Textarea
+                    placeholder="Descreva seu projeto aqui..."
+                    value={selectedProject}
+                    onChange={(event) => {
+                      setSelectedProject(event.target.value);
+                      setError("");
+                    }}
+                    rows={8}
+                  />
+                </FormControl>
+                {error && <Text color="red.500">{error}</Text>}
+                <Button
+                  type="submit"
+                  colorScheme="purple"
+                  isLoading={loading}
+                  isDisabled={loading || selectedProject.trim().length < 50}
                 >
-                  <p>
-                    <strong>Nome:</strong> {suggestion.name}
-                  </p>
-                  <p>
-                    <strong>Descrição:</strong> {suggestion.description}
-                  </p>
-                </div>
+                  {loading ? "Processando..." : "Enviar"}
+                </Button>
+              </VStack>
+            </form>
+          )}
+          {currentStep === 3 && (
+            <>
+              <Heading as="h2" size="xl" my={4}>
+                Sugestões para ferramentas
+              </Heading>
+              <Text color="gray.700" mb={6} mx={6} textAlign="justify">
+                {selectedProject}
+              </Text>
+              {nameSuggestions.map((name, index) => (
+                <Box
+                  key={index}
+                  borderWidth={1}
+                  borderRadius="md"
+                  p={6}
+                  mb={4}
+                  w="full"
+                  bg="white"
+                  shadow="md"
+                >
+                  <Text>
+                    <strong>Nome:</strong> {name.name}
+                  </Text>
+                  <Text>
+                    <strong>Descrição:</strong> {name.description}
+                  </Text>
+                </Box>
               ))}
-            </div>
-          </>
-        )}
-      </div>
-    </div>
+              <Flex mt={6} justifyContent="space-between" width="full">
+                <Button colorScheme="purple" onClick={handleRestart}>
+                  Iniciar novamente
+                </Button>
+                <Button
+                  colorScheme="purple"
+                  onClick={() => (window.location.href = "/ferramentas")}
+                >
+                  Ver todas as ferramentas
+                </Button>
+              </Flex>
+            </>
+          )}
+        </Box>
+      </Flex>
+    </Container>
   );
 }

@@ -22,6 +22,7 @@ export default function Page({ params }: PageProps): ReactNode {
   const [discussions, setDiscussions] = useState<any>([]);
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const [visibleDiscussions, setVisibleDiscussions] = useState<number>(3);
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     title: "",
     context: "",
@@ -71,6 +72,7 @@ export default function Page({ params }: PageProps): ReactNode {
       return;
     }
 
+    setLoading(true);
     try {
       const { data } = await DiscussionService.iniciarDiscussao(
         formData.title,
@@ -82,6 +84,8 @@ export default function Page({ params }: PageProps): ReactNode {
       fetchDiscussions();
     } catch (error) {
       console.error("Erro ao buscar discussões para o projeto:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -184,9 +188,9 @@ export default function Page({ params }: PageProps): ReactNode {
 
             <Divider className="my-8" />
             <Flex direction="column" flexGrow={1}>
-              {discussions.length === 0 ? (
+              {loading ? (
                 <PulseCards />
-              ) : (
+              ) : discussions.length > 0 ? (
                 discussions
                   .slice(0, visibleDiscussions)
                   .map((discussion: any) => (
@@ -199,7 +203,7 @@ export default function Page({ params }: PageProps): ReactNode {
                       link={`/forum/discussao/${discussion.id}`}
                     />
                   ))
-              )}
+              ) : null}
             </Flex>
 
             {visibleDiscussions < discussions.length && (
@@ -213,7 +217,7 @@ export default function Page({ params }: PageProps): ReactNode {
           </section>
         </div>
       ) : (
-        <PulseCards bigCard={true}/>
+        <PulseCards bigCard={true} />
       )}
     </Container>
   );
