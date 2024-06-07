@@ -140,10 +140,10 @@ export default function Page(): ReactNode {
         >
           {![1, 3].includes(currentStep) && (
             <>
-              <Heading as="h1" size="lg" my={4}>
+              <Heading as="h1" size="lg" my={4} textAlign={{ base: "center" }}>
                 Serviço de Sugestões de Ferramentas
               </Heading>
-              <Text color="gray.700" mb={6} textAlign="center">
+              <Text color="gray.700" mb={6} textAlign={{ base: "justify" }}>
                 Nosso serviço utiliza inteligência artificial para ajudar você a
                 encontrar as melhores ferramentas para utilizar durante o
                 desenvolvimento da sua startup. Siga os passos para selecionar

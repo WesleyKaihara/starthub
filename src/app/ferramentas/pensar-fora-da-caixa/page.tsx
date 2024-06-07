@@ -135,10 +135,10 @@ export default function Page(): ReactNode {
         >
           {![1, 3].includes(currentStep) && (
             <>
-              <Heading as="h1" size="lg" my={4}>
+              <Heading as="h1" size="lg" my={4} textAlign={{ base: "center" }}>
                 Serviço para Pensar fora da caixa
               </Heading>
-              <Text color="gray.700" mb={6} textAlign="center">
+              <Text color="gray.700" mb={6} textAlign="justify">
                 Nosso serviço utiliza inteligência artificial para desafiar você
                 a pensar fora da caixa e encontrar soluções inovadoras para seus
                 projetos. Siga os passos para selecionar seu projeto, descrever

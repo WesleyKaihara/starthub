@@ -67,6 +67,14 @@ const StartupForm: React.FC = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!file.type.includes("image/png")) {
+        setError("image", {
+          type: "manual",
+          message: "Por favor, selecione um arquivo PNG",
+        });
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setValue("image", file);
@@ -269,7 +277,7 @@ const StartupForm: React.FC = () => {
                 borderRadius="lg"
                 overflow="hidden"
                 align="center"
-                justify="center" // Centraliza vertical e horizontalmente
+                justify="center"
               >
                 {previewImage ? (
                   <Image
