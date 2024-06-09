@@ -143,7 +143,7 @@ const SignIn: React.FC = () => {
         w="full"
         maxW="md"
         bg="white"
-        bgOpacity="0.9"
+        opacity="0.9"
         borderRadius="lg"
         shadow="md"
         p={6}

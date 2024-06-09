@@ -97,15 +97,7 @@ export default function Navbar() {
                     </MenuButton>
                     <MenuList
                       zIndex={5}
-                      bg={useColorModeValue(
-                        "rgb(255, 255, 255)",
-                        "rgb(26, 32, 44)"
-                      )}
                       border="none"
-                      boxShadow={useColorModeValue(
-                        "2px 4px 6px 2px rgba(160, 174, 192, 0.6)",
-                        "2px 4px 6px 2px rgba(9, 17, 28, 0.6)"
-                      )}
                     >
                       {dropdownLinks.map((link, index) => (
                         <MenuLink

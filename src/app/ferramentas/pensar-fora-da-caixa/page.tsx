@@ -92,7 +92,7 @@ export default function Page(): ReactNode {
 
   const handleRestart = () => {
     setSelectedProject("");
-    setFerramentas([]);
+    setTopicosRelevantes([]);
     setCurrentStep(1);
   };
 

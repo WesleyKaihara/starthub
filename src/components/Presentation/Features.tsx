@@ -13,7 +13,7 @@ import {
 interface IFeature {
   heading: string;
   content: string;
-  icon: SVGProps<SVGElement>;
+  icon: React.ReactNode;
 }
 
 const features: IFeature[] = [
@@ -100,7 +100,7 @@ const Features = () => {
         {features.map((feature, index) => (
           <Box
             key={index}
-            bg={useColorModeValue("gray.100", "gray.700")}
+            bg="gray.100"
             p={6}
             rounded="lg"
             textAlign="center"

@@ -169,8 +169,6 @@ const HeroSection = () => {
                 bgGradient="linear(to-br, #735EF3, #998FF0)"
                 color="white"
                 _hover={{ bgGradient: "linear(to-br, #4432B0, #998FF0)" }}
-                variant="solid"
-                size="lg"
                 rounded="md"
                 fontWeight="bold"
                 mb={{ base: 2, sm: 0 }}

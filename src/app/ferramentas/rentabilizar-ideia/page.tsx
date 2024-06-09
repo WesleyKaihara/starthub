@@ -54,7 +54,7 @@ export default function Page(): ReactNode {
       try {
         const { data } = await ProjectService.buscarProjetosUsuario(userId);
         setProjetos(data);
-      } catch (error) {
+      } catch (error: any) {
         toast({
           title: "Erro ao buscar projetos do usuário.",
           description: error.message,
@@ -97,7 +97,7 @@ export default function Page(): ReactNode {
       const { data } = await AnalysisService.listarFormasVenda(selectedProject);
       setTopicosRelevantes(data.salesLocations);
       setCurrentStep(3);
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Erro ao listar formas para rentabilizar projeto.",
         description: error.message,
