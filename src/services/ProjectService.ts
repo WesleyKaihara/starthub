@@ -1,3 +1,4 @@
+import { UpdateProjetoBody } from '@/types/Projeto';
 import axios from "axios";
 
 const API_HOST = process.env.NEXT_PUBLIC_STARTHUB_API;
@@ -20,6 +21,14 @@ export class ProjectService {
     return await axios.post(`${API_HOST}/project`, projeto, {
       headers: {
         "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+
+  static async atualizarProjeto(projetoId: number, projeto: UpdateProjetoBody) {
+    return await axios.put(`${API_HOST}/project/${projetoId}`, projeto, {
+      headers: {
+        "Content-Type": "application/json",
       },
     });
   }

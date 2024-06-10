@@ -4,3 +4,10 @@ export interface Projeto {
   description: string;
   image: string;
 }
+
+export interface UpdateProjetoBody {
+  name: string;
+  description: string;
+  userId: number;
+  private: boolean;
+}

@@ -6,7 +6,15 @@ import PulseCards from "@/components/Loading/PulseCards";
 import Title from "@/components/Title";
 import { DiscussionService } from "@/services/DiscussaoService";
 import { ProjectService } from "@/services/ProjectService";
-import { Container, Divider, Flex } from "@chakra-ui/react";
+import {
+  Container,
+  Divider,
+  Flex,
+  Button,
+  Input,
+  Textarea,
+  useToast,
+} from "@chakra-ui/react";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 
 type Params = {
@@ -27,6 +35,12 @@ export default function Page({ params }: PageProps): ReactNode {
     title: "",
     context: "",
   });
+  const [editData, setEditData] = useState({
+    name: "",
+    description: "",
+  });
+  const [isEditing, setIsEditing] = useState(false);
+  const toast = useToast();
 
   const fetchProjeto = useCallback(async () => {
     try {
@@ -34,6 +48,7 @@ export default function Page({ params }: PageProps): ReactNode {
         +params.projetoId
       );
       setProjeto(data);
+      setEditData({ name: data.name, description: data.description });
     } catch (error) {
       console.error("Erro ao buscar o projeto:", error);
     }
@@ -99,6 +114,47 @@ export default function Page({ params }: PageProps): ReactNode {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleEditChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setEditData({ ...editData, [e.target.name]: e.target.value });
+  };
+
+  const handleSaveChanges = async () => {
+    setLoading(true);
+    try {
+      const updatedProjeto = {
+        ...editData,
+        userId: projeto.userId,
+        private: false,
+      };
+      await ProjectService.atualizarProjeto(
+        Number(params.projetoId),
+        updatedProjeto
+      );
+      setProjeto({ ...projeto, ...editData });
+      setIsEditing(false);
+      toast({
+        title: "Sucesso",
+        description: "Projeto atualizado com sucesso",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Erro ao atualizar o projeto",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      console.error("Erro ao atualizar o projeto:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Container maxW="6xl" px={{ base: 6 }} py={10}>
       <OfferCard
@@ -121,8 +177,52 @@ export default function Page({ params }: PageProps): ReactNode {
               className="w-32 h-32 md:w-16 md:h-16 mb-4 md:mb-0 rounded-full"
             />
             <div className="md:ml-4">
-              <Title>{projeto.name}</Title>
-              <p>{projeto.description}</p>
+              {isEditing ? (
+                <>
+                  <Input
+                    name="name"
+                    value={editData.name}
+                    onChange={handleEditChange}
+                    placeholder="Nome da Startup"
+                    mb={2}
+                  />
+                  <Textarea
+                    name="description"
+                    value={editData.description}
+                    onChange={handleEditChange}
+                    placeholder="Descrição da Startup"
+                    mb={2}
+                  />
+                  <Button
+                    colorScheme="purple"
+                    onClick={handleSaveChanges}
+                    isLoading={loading}
+                    mb={2}
+                  >
+                    Salvar Alterações
+                  </Button>
+                  <Button
+                    colorScheme="red"
+                    onClick={() => setIsEditing(false)}
+                    mb={2}
+                    mx={2}
+                  >
+                    Cancelar
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Title>{projeto.name}</Title>
+                  <p>{projeto.description}</p>
+                  <Button
+                    colorScheme="purple"
+                    onClick={() => setIsEditing(true)}
+                    mt={2}
+                  >
+                    Editar
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 
@@ -136,14 +236,13 @@ export default function Page({ params }: PageProps): ReactNode {
                 >
                   Título:
                 </label>
-                <input
+                <Input
                   type="text"
                   id="title"
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
                   placeholder="Digite o título (mínimo de 10 caracteres)"
-                  className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-400"
                   required
                 />
                 {formErrors.title && (
@@ -159,16 +258,15 @@ export default function Page({ params }: PageProps): ReactNode {
                 >
                   Contexto:
                 </label>
-                <textarea
+                <Textarea
                   id="context"
                   name="context"
                   value={formData.context}
                   onChange={handleChange}
                   rows={4}
                   placeholder="Descreva o contexto (mínimo de 40 caracteres)"
-                  className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-400"
                   required
-                ></textarea>
+                ></Textarea>
                 {formErrors.context && (
                   <p className="text-red-500 text-xs mt-1">
                     {formErrors.context}
@@ -177,16 +275,13 @@ export default function Page({ params }: PageProps): ReactNode {
               </div>
 
               <div>
-                <button
-                  type="submit"
-                  className="bg-primary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
+                <Button type="submit" colorScheme="purple" isLoading={loading}>
                   Iniciar Discussão
-                </button>
+                </Button>
               </div>
             </form>
 
-            <Divider className="my-8" />
+            <Divider my={8} />
             <Flex direction="column" flexGrow={1}>
               {loading ? (
                 <PulseCards />
@@ -207,12 +302,14 @@ export default function Page({ params }: PageProps): ReactNode {
             </Flex>
 
             {visibleDiscussions < discussions.length && (
-              <button
+              <Button
                 onClick={loadMoreDiscussions}
-                className="bg-primary text-white font-bold py-2 px-4 rounded-full mt-4"
+                colorScheme="purple"
+                mt={4}
+                alignSelf="center"
               >
                 Carregar Mais
-              </button>
+              </Button>
             )}
           </section>
         </div>
