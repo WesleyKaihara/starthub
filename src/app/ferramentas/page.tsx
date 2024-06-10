@@ -7,35 +7,35 @@ import { Container, Box, Heading, Text, Grid } from "@chakra-ui/react";
 
 const cardsData = [
   {
-    imageUrl: "/logo-starthub.png",
+    imageUrl: "/images/Thumbnail/rentabilizar-ideia.png",
     title: "Rentabilizar ideia",
     description:
       "Receba recomendações de formas para gerar valor com sua ideia",
     href: "/ferramentas/rentabilizar-ideia",
   },
   {
-    imageUrl: "/logo-starthub.png",
+    imageUrl: "/images/Thumbnail/aumentar-produtividade.png",
     title: "Aumentar produtividade",
     description:
       "Levantamento de ferramentas que podem aumentar a produtividade da sua startup",
     href: "/ferramentas/ferramentas-externas",
   },
   {
-    imageUrl: "/logo-starthub.png",
+    imageUrl: "/images/Thumbnail/pensar-fora-da-caixa.png",
     title: "Pense fora da caixa",
     description:
       "Serão geradas ideia para ajudar na desenvolvimento de ideias inovadoras para seu projeto",
     href: "/ferramentas/pensar-fora-da-caixa",
   },
   {
-    imageUrl: "/logo-starthub.png",
+    imageUrl: "/images/Thumbnail/topicos-estudo.png",
     title: "Tópicos de Estudo",
     description:
       "Levantamento de informações que podem auxiliar na tomada de decisões do Empreendedor",
     href: "/ferramentas/dados-relevantes",
   },
   {
-    imageUrl: "/logo-starthub.png",
+    imageUrl: "/images/Thumbnail/gerar-nomes.png",
     title: "Geração de nomes",
     description:
       "Tenha um nome que represente a sua ideia de maneira clara e marcante",
