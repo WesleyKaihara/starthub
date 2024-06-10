@@ -189,7 +189,7 @@ const StartupForm: React.FC = () => {
                   },
                 })}
                 placeholder="Informe o nome do seu produto (Pode ser alterado posteriormente)"
-                width="full" // Para ocupar todo o espaço disponível
+                width="full"
               />
               <FormErrorMessage>
                 {errors.name && errors.name.message}
@@ -266,7 +266,7 @@ const StartupForm: React.FC = () => {
 
         {step === 3 && (
           <Box>
-            <FormControl id="image" isInvalid={!!errors.image}>
+            <FormControl id="image" isInvalid={!!errors.image} textAlign="center">
               <Flex
                 position="relative"
                 w="96"
@@ -278,6 +278,7 @@ const StartupForm: React.FC = () => {
                 overflow="hidden"
                 align="center"
                 justify="center"
+                mx="auto"
               >
                 {previewImage ? (
                   <Image
@@ -286,6 +287,7 @@ const StartupForm: React.FC = () => {
                     objectFit="cover"
                     maxW="full"
                     maxH="full"
+                    mx="auto"
                   />
                 ) : (
                   <Image
@@ -294,6 +296,7 @@ const StartupForm: React.FC = () => {
                     objectFit="cover"
                     maxW="full"
                     maxH="full"
+                    mx="auto"
                   />
                 )}
                 <Box

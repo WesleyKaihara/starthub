@@ -1,49 +1,70 @@
 "use client";
 
-import DefaultCard from "@/components/Cards/DefaultCard";
 import OfferCard from "@/components/Cards/OfferCard";
 import Title from "@/components/Title";
-import { Container } from "@chakra-ui/react";
+import {
+  Container,
+  useToast,
+  Button,
+  Center,
+  Box,
+  SimpleGrid,
+  Spinner,
+} from "@chakra-ui/react";
+import { useCallback, useEffect, useState } from "react";
+import { Projeto } from "@/types/Projeto";
+import { ProjectService } from "@/services/ProjectService";
+import { useSession } from "next-auth/react";
+import CardProjeto from "@/components/CardProjeto";
+import PulseCards from '@/components/Loading/PulseCards';
 
-const cardsData = [
-  {
-    imageUrl: "/logo-starthub.png",
-    title: "Rentabilizar ideia",
-    description:
-      "Receba recomendações de formas para gerar valor com sua ideia",
-    href: "/ferramentas/rentabilizar-ideia",
-  },
-  {
-    imageUrl: "/logo-starthub.png",
-    title: "Aumentar produtividade",
-    description:
-      "Levantamento de ferramentas que podem aumentar a produtividade da sua startup",
-    href: "/ferramentas/ferramentas-externas",
-  },
-  {
-    imageUrl: "/logo-starthub.png",
-    title: "Pense fora da caixa",
-    description:
-      "Serão geradas ideia para ajudar na desenvolvimento de ideias inovadoras para seu projeto",
-    href: "/ferramentas/pensar-fora-da-caixa",
-  },
-  {
-    imageUrl: "/logo-starthub.png",
-    title: "Tópicos de Estudo",
-    description:
-      "Levantamento de informações que podem auxiliar na tomada de decisões do Empreendedor",
-    href: "/ferramentas/dados-relevantes",
-  },
-  {
-    imageUrl: "/logo-starthub.png",
-    title: "Geração de nomes",
-    description:
-      "Tenha um nome que represente a sua ideia de maneira clara e marcante",
-    href: "/ferramentas/gerar-nomes",
-  },
-];
+export default function MinhasStartups() {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      window.location.href = "/login?callbackUrl=/minhas-startups";
+    },
+  });
 
-export default async function Destaque() {
+  const [projetos, setProjetos] = useState<Projeto[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const toast = useToast();
+
+  const fetchProjects = useCallback(
+    async (userId: number) => {
+      try {
+        const { data } = await ProjectService.buscarProjetosUsuario(userId);
+        setProjetos(data);
+      } catch (error: any) {
+        toast({
+          title: "Erro ao buscar projetos do usuário.",
+          description: error.message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [toast]
+  );
+
+  useEffect(() => {
+    if (session?.user.id) {
+      fetchProjects(Number(session.user.id));
+    }
+  }, [fetchProjects, session?.user.id]);
+
+  const handleButtonClick = (projetoId: number) => {
+    window.location.href = `/startups/${projetoId}`;
+  };
+
+  const handleCreateStartup = () => {
+    window.location.href = "/startups/cadastro";
+  };
+
   return (
     <Container maxW="6xl" py={5}>
       <OfferCard
@@ -57,20 +78,34 @@ export default async function Destaque() {
         buttonTxt="Saiba Mais"
         link="/ferramentas"
       />
-      <section className="mt-10">
+      <Box mt={10}>
         <Title>Minhas Startups</Title>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-          {cardsData.map((card, index) => (
-            <DefaultCard
-              key={index}
-              imageUrl={card.imageUrl}
-              title={card.title}
-              description={card.description}
-              href={card.href}
-            />
-          ))}
-        </div>
-      </section>
+        {isLoading ? (
+          <PulseCards />
+        ) : (
+          <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={4} mt={4}>
+            {projetos.length > 0 ? (
+              projetos.map((projeto) => (
+                <CardProjeto
+                  key={projeto.id}
+                  imageSrc={projeto.image}
+                  title={projeto.name}
+                  description={projeto.description}
+                  buttonText="Mais detalhes"
+                  buttonOnClick={() => handleButtonClick(projeto.id)}
+                  cardOnClick={() => handleButtonClick(projeto.id)}
+                />
+              ))
+            ) : (
+              <Center w="100%">
+                <Button colorScheme="teal" onClick={handleCreateStartup}>
+                  Criar Nova Startup
+                </Button>
+              </Center>
+            )}
+          </SimpleGrid>
+        )}
+      </Box>
     </Container>
   );
 }

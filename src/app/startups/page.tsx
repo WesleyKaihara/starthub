@@ -26,8 +26,7 @@ export default function StartupsPage() {
     try {
       const { data: projetos } = await ProjectService.listarProjetos();
       setProjetos(projetos);
-      setFilteredProjetos(projetos); // Initially display all projects
-      console.log(projetos);
+      setFilteredProjetos(projetos);
     } catch (error) {
       console.error("Erro ao buscar projetos:", error);
     } finally {

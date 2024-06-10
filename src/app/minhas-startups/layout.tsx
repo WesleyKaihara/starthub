@@ -8,7 +8,7 @@ export const metadata = {
     "Plataforma para auxiliar na idealização e desenvolvimento de startups",
 };
 
-export default function DestaqueLayout({
+export default function MinhasStartupsLayout({
   children,
 }: {
   children: React.ReactNode;
