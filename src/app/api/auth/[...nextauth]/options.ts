@@ -17,7 +17,7 @@ export const options: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const res = await fetch("http://localhost:3000/auth/login", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_STARTHUB_API}/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

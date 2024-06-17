@@ -15,6 +15,7 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
+import { useSession } from 'next-auth/react';
 import { ReactNode, useCallback, useEffect, useState } from "react";
 
 type Params = {
@@ -25,7 +26,9 @@ type PageProps = {
   params: Params;
 };
 
-export default function Page({ params }: PageProps): ReactNode {
+export default function Startup({ params }: PageProps): ReactNode {
+  const { data: session } = useSession();
+
   const [projeto, setProjeto] = useState<any>(null);
   const [discussions, setDiscussions] = useState<any>([]);
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
@@ -214,13 +217,15 @@ export default function Page({ params }: PageProps): ReactNode {
                 <>
                   <Title>{projeto.name}</Title>
                   <p>{projeto.description}</p>
-                  <Button
-                    colorScheme="purple"
-                    onClick={() => setIsEditing(true)}
-                    mt={2}
-                  >
-                    Editar
-                  </Button>
+                  {session?.user?.id === projeto.userId && (
+                    <Button
+                      colorScheme="purple"
+                      onClick={() => setIsEditing(true)}
+                      mt={2}
+                    >
+                      Editar
+                    </Button>
+                  )}
                 </>
               )}
             </div>
