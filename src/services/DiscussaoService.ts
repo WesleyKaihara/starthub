@@ -23,8 +23,8 @@ export class DiscussionService {
     });
   }
 
-  static listarDiscussoes() {
-    return axios.get(`${API_HOST}/discussion`);
+  static listarDiscussoes(page: number, limit: number) {
+    return axios.get(`${API_HOST}/discussion`, { params: { page, limit } });
   }
 
   static adicionarInteracao(

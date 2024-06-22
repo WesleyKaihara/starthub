@@ -2,21 +2,13 @@
 
 import OfferCard from "@/components/Cards/OfferCard";
 import Title from "@/components/Title";
-import {
-  Container,
-  useToast,
-  Button,
-  Center,
-  Box,
-  SimpleGrid,
-  Spinner,
-} from "@chakra-ui/react";
+import { Container, useToast, Button, Box, SimpleGrid } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { Projeto } from "@/types/Projeto";
 import { ProjectService } from "@/services/ProjectService";
 import { useSession } from "next-auth/react";
 import CardProjeto from "@/components/CardProjeto";
-import PulseCards from '@/components/Loading/PulseCards';
+import PulseCards from "@/components/Loading/PulseCards";
 
 export default function MinhasStartups() {
   const { data: session } = useSession({
@@ -65,6 +57,11 @@ export default function MinhasStartups() {
     window.location.href = "/startups/cadastro";
   };
 
+  const handleDeleteButtonClick = async (projetoId: number) => {
+    await ProjectService.deletarProjeto(projetoId);
+    fetchProjects(Number(session?.user.id));
+  };
+
   return (
     <Container maxW="6xl" py={5}>
       <OfferCard
@@ -94,14 +91,18 @@ export default function MinhasStartups() {
                   buttonText="Mais detalhes"
                   buttonOnClick={() => handleButtonClick(projeto.id)}
                   cardOnClick={() => handleButtonClick(projeto.id)}
+                  showDeleteButton={true}
+                  deleteButtonOnClick={() =>
+                    handleDeleteButtonClick(projeto.id)
+                  }
                 />
               ))
             ) : (
-              <Center w="100%">
-                <Button colorScheme="teal" onClick={handleCreateStartup}>
-                  Criar Nova Startup
+              <Box>
+                <Button colorScheme="purple" onClick={handleCreateStartup}>
+                  Adicionar uma Startup
                 </Button>
-              </Center>
+              </Box>
             )}
           </SimpleGrid>
         )}

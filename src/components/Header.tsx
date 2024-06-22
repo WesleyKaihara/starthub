@@ -41,12 +41,8 @@ export default function Navbar() {
   const { data: session } = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handleAuthButtonClick = () => {
-    if (session?.user?.id) {
-      signOut({ callbackUrl: "/" });
-    } else {
-      window.location.href = "/login";
-    }
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/" });
   };
 
   return (
@@ -95,10 +91,7 @@ export default function Navbar() {
                         />
                       </Flex>
                     </MenuButton>
-                    <MenuList
-                      zIndex={5}
-                      border="none"
-                    >
+                    <MenuList zIndex={5} border="none">
                       {dropdownLinks.map((link, index) => (
                         <MenuLink
                           key={index}
@@ -114,17 +107,49 @@ export default function Navbar() {
             </HStack>
           </HStack>
 
-          <Button
-            bgGradient="linear(to-br, #735EF3, #998FF0)"
-            color="white"
-            _hover={{ bgGradient: "linear(to-br, #4432B0, #998FF0)" }}
-            size="md"
-            rounded="md"
-            display={{ base: "none", md: "block" }}
-            onClick={handleAuthButtonClick}
-          >
-            {session?.user?.id ? "Sair" : "Acessar"}
-          </Button>
+          {session?.user?.id ? (
+            window.location.pathname === "/perfil" ? (
+              <Button
+                bgGradient="linear(to-br, #735EF3, #998FF0)"
+                color="white"
+                _hover={{ bgGradient: "linear(to-br, #4432B0, #998FF0)" }}
+                size="md"
+                rounded="md"
+                onClick={handleSignOut}
+              >
+                Sair
+              </Button>
+            ) : (
+              <Link
+                href="/perfil"
+                _hover={{ textDecoration: "none" }}
+                display={{ base: "none", md: "block" }}
+              >
+                <Button
+                  bgGradient="linear(to-br, #735EF3, #998FF0)"
+                  color="white"
+                  _hover={{ bgGradient: "linear(to-br, #4432B0, #998FF0)" }}
+                  size="md"
+                  rounded="md"
+                >
+                  Perfil
+                </Button>
+              </Link>
+            )
+          ) : (
+            <Button
+              bgGradient="linear(to-br, #735EF3, #998FF0)"
+              color="white"
+              _hover={{ bgGradient: "linear(to-br, #4432B0, #998FF0)" }}
+              size="md"
+              rounded="md"
+              display={{ base: "none", md: "block" }}
+              onClick={() => (window.location.href = "/login")}
+            >
+              Acessar
+            </Button>
+          )}
+
           <IconButton
             size="md"
             icon={isOpen ? <AiOutlineClose /> : <GiHamburgerMenu />}

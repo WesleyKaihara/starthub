@@ -3,7 +3,7 @@
 import { useState, ReactNode, useCallback, useEffect, useRef } from "react";
 import Title from "@/components/Title";
 import { DiscussionService } from "@/services/DiscussaoService";
-import { Container, Divider } from "@chakra-ui/react";
+import { Container, Divider, Text } from "@chakra-ui/react";
 import HorizontalCard from "@/components/Cards/HorizontalCard";
 import PulseCards from "@/components/Loading/PulseCards";
 
@@ -55,6 +55,9 @@ export default function Home() {
   const [email, setEmail] = useState<string>("");
   const [discussions, setDiscussions] = useState<any[]>([]);
   const [visibleDiscussions, setVisibleDiscussions] = useState<number>(3);
+  const [page, setPage] = useState<number>(1);
+  const [limit] = useState<number>(10);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleOpenModal = (modalId: number) => {
     setActiveModal(modalId);
@@ -73,22 +76,25 @@ export default function Home() {
     console.log("Email submitted:", email);
   };
 
-  const fetchInteractions = useCallback(async () => {
+  const fetchInteractions = useCallback(async (page: number, limit: number) => {
+    setLoading(true);
     try {
-      const { data } = await DiscussionService.listarDiscussoes();
-      setDiscussions(data);
+      const { data } = await DiscussionService.listarDiscussoes(page, limit);
+      setDiscussions((prevDiscussions) => [...prevDiscussions, ...data]);
     } catch (error) {
       console.error("Erro ao buscar as interações da discussão:", error);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   const loadMoreDiscussions = () => {
-    setVisibleDiscussions((prev) => prev + 3);
+    setPage((prev) => prev + 1);
   };
 
   useEffect(() => {
-    fetchInteractions();
-  }, [fetchInteractions]);
+    fetchInteractions(page, limit);
+  }, [fetchInteractions, page, limit]);
 
   return (
     <Container maxW="6xl" px={{ base: 6 }} py={5}>
@@ -215,25 +221,30 @@ export default function Home() {
       </Modal>
       <Divider className="my-8" />
       <Title>Discussões</Title>
+      {discussions.length === 0 && !loading && (
+        <Text fontSize="xl" color="gray.500" textAlign="center" mt={10}>
+          Nenhuma discussão encontrada.
+        </Text>
+      )}
       <div className="container mx-auto">
-        {discussions.length === 0 ? (
+        {discussions.length === 0 && loading ? (
           <PulseCards />
         ) : (
-          discussions
-            .slice(0, visibleDiscussions)
-            .map((discussion: any) => (
-              <HorizontalCard
-                key={discussion.id}
-                id={discussion.id}
-                title={discussion.title}
-                description={discussion.context}
-                image="/logo-starthub.png"
-                link={`/forum/discussao/${discussion.id}`}
-              />
-            ))
+          discussions.map((discussion: any) => (
+            <HorizontalCard
+              key={discussion.id}
+              id={discussion.id}
+              title={discussion.title}
+              description={discussion.context}
+              image="/logo-starthub.png"
+              link={`/forum/discussao/${discussion.id}`}
+            />
+          ))
         )}
 
-        {visibleDiscussions < discussions.length && (
+        {loading && <PulseCards />}
+
+        {discussions.length > 0 && !loading && (
           <button
             onClick={loadMoreDiscussions}
             className="bg-primary text-white font-bold py-2 px-4 rounded-full mt-4"

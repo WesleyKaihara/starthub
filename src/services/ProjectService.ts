@@ -1,4 +1,4 @@
-import { UpdateProjetoBody } from '@/types/Projeto';
+import { UpdateProjetoBody } from "@/types/Projeto";
 import axios from "axios";
 
 const API_HOST = process.env.NEXT_PUBLIC_STARTHUB_API;
@@ -31,5 +31,9 @@ export class ProjectService {
         "Content-Type": "application/json",
       },
     });
+  }
+
+  static async deletarProjeto(projetoId: number) {
+    return await axios.delete(`${API_HOST}/project/${projetoId}`);
   }
 }
