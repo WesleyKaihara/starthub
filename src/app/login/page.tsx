@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, FormEvent, ChangeEvent } from "react";
-import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import {
   Container,
@@ -17,6 +16,7 @@ import {
   InputGroup,
   InputRightElement,
   IconButton,
+  Link,
 } from "@chakra-ui/react";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 
@@ -25,6 +25,7 @@ const SignIn: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = await signIn("credentials", {
@@ -40,7 +41,7 @@ const SignIn: React.FC = () => {
       console.error("Erro de autenticação:", result.error);
       setPassword("");
     } else {
-      window.location.href = "startups";
+      window.location.href = "/startups";
     }
   };
 
@@ -83,7 +84,9 @@ const SignIn: React.FC = () => {
         p={6}
       >
         <VStack spacing={4} mb={6} textAlign="center">
-          <Image src="/logo-starthub.png" alt="logo" w={12} h={12} mb={2} />
+          <Link href="/">
+            <Image src="/logo-starthub.png" alt="logo" w={12} h={12} mb={2} />
+          </Link>
           <Heading as="h1" fontSize="2xl" fontWeight="bold" color="gray.900">
             StartHub
           </Heading>

@@ -12,40 +12,26 @@ import {
   useToast,
   Container,
 } from "@chakra-ui/react";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import OfferCard from "@/components/Cards/OfferCard";
+import { UserService } from "@/services/UserService";
+import useAxiosAuth from '@/lib/hooks/useAxiosAuth';
 
 export default function Profile() {
   const { data: session } = useSession();
   const toast = useToast();
+  const axiosAuth = useAxiosAuth();
 
+  const fetchPost = async () => {
+    const res = await axiosAuth.get("/user");
+    console.log(res.data)
+  };
+ 
   const [name, setName] = useState(session?.user?.name || "");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSave = async () => {
-    if (password && password !== confirmPassword) {
-      toast({
-        title: "Erro",
-        description: "As senhas não coincidem.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-      return;
-    }
-
     try {
-      const res = await fetch("/api/user/update", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          ...(password && { password }),
-        }),
-      });
+      const res = await UserService.updateUser();
 
       if (res.ok) {
         toast({
@@ -73,10 +59,6 @@ export default function Profile() {
         isClosable: true,
       });
     }
-  };
-
-  const handleSignOut = async () => {
-    await signOut();
   };
 
   return (
@@ -107,25 +89,10 @@ export default function Profile() {
             <FormLabel>Email</FormLabel>
             <Input value={session?.user?.email ?? ""} isReadOnly />
           </FormControl>
-          <FormControl>
-            <FormLabel>Nova Senha</FormLabel>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Nova Senha"
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Confirmar Nova Senha</FormLabel>
-            <Input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirmar Nova Senha"
-            />
-          </FormControl>
           <Button colorScheme="purple" onClick={handleSave} maxW="lg">
+            Salvar
+          </Button>
+          <Button colorScheme="purple" onClick={fetchPost} maxW="lg">
             Salvar
           </Button>
         </Stack>

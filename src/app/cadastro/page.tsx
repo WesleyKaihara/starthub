@@ -19,6 +19,7 @@ import {
   InputGroup,
   InputRightElement,
   IconButton,
+  Link,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
@@ -97,10 +98,9 @@ const SignIn: React.FC = () => {
   };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+    const value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
     setNome(value);
   };
-  
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -149,7 +149,9 @@ const SignIn: React.FC = () => {
         p={6}
       >
         <VStack spacing={4} mb={6} textAlign="center">
-          <Image src="/logo-starthub.png" alt="logo" w={12} h={12} mb={2} />
+          <Link href="/">
+            <Image src="/logo-starthub.png" alt="logo" w={12} h={12} mb={2} />
+          </Link>
           <Heading as="h1" fontSize="2xl" fontWeight="bold" color="gray.900">
             StartHub
           </Heading>

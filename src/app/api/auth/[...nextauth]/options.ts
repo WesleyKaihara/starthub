@@ -6,6 +6,8 @@ type User = {
   id: string;
   name: string;
   email: string;
+  accessToken: string;
+  refreshToken: string;
 };
 
 export const options: NextAuthOptions = {
@@ -40,6 +42,8 @@ export const options: NextAuthOptions = {
             id: decodedToken.sub,
             name: decodedToken.username,
             email: decodedToken.email,
+            accessToken: tokens.access_token,
+            refreshToken: tokens.refresh_token,
           };
           return user;
         } else {
@@ -52,10 +56,11 @@ export const options: NextAuthOptions = {
     signIn: "/login",
   },
   callbacks: {
+    async jwt({ token, user }) {
+      return { ...token, ...user };
+    },
     async session({ session, token }) {
-      if (token.sub) {
-        session.user.id = Number(token.sub);
-      }
+      session.user = token as any;
       return session;
     },
   },
