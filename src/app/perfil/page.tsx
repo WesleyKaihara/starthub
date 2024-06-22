@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -15,41 +15,72 @@ import {
 import { useSession } from "next-auth/react";
 import OfferCard from "@/components/Cards/OfferCard";
 import { UserService } from "@/services/UserService";
-import useAxiosAuth from '@/lib/hooks/useAxiosAuth';
+import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+
+interface UserData {
+  id: number | null;
+  name: string;
+  email: string;
+}
 
 export default function Profile() {
-  const { data: session } = useSession();
   const toast = useToast();
   const axiosAuth = useAxiosAuth();
+  const { status } = useSession();
 
-  const fetchPost = async () => {
-    const res = await axiosAuth.get("/user");
-    console.log(res.data)
+  const userService = new UserService(axiosAuth);
+
+  const [userData, setUserData] = useState<UserData>({
+    id: null,
+    name: "",
+    email: "",
+  });
+
+  const fetchUser = useCallback(async () => {
+    try {
+      const res = await axiosAuth.get("/user");
+      const userDataFromApi: UserData = {
+        id: res.data.id,
+        name: res.data.name,
+        email: res.data.email,
+      };
+      setUserData(userDataFromApi);
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Falha ao carregar perfil.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [axiosAuth, toast]);
+
+  useEffect(() => {
+    if (status !== "loading") {
+      fetchUser();
+    }
+  }, [fetchUser, status]);
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserData({ ...userData, name: e.target.value });
   };
- 
-  const [name, setName] = useState(session?.user?.name || "");
 
   const handleSave = async () => {
     try {
-      const res = await UserService.updateUser();
+      const res = await userService.updateUser(Number(userData.id), {
+        name: userData.name,
+      });
 
-      if (res.ok) {
-        toast({
-          title: "Sucesso",
-          description: "Perfil atualizado com sucesso.",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-      } else {
-        toast({
-          title: "Erro",
-          description: "Falha ao atualizar o perfil.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      }
+      console.log(res);
+
+      toast({
+        title: "Sucesso",
+        description: "Perfil atualizado com sucesso.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     } catch (error) {
       toast({
         title: "Erro",
@@ -80,19 +111,16 @@ export default function Profile() {
           <FormControl>
             <FormLabel>Nome</FormLabel>
             <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={userData.name}
+              onChange={handleNameChange}
               placeholder="Nome"
             />
           </FormControl>
           <FormControl>
             <FormLabel>Email</FormLabel>
-            <Input value={session?.user?.email ?? ""} isReadOnly />
+            <Input value={userData.email} isReadOnly />
           </FormControl>
           <Button colorScheme="purple" onClick={handleSave} maxW="lg">
-            Salvar
-          </Button>
-          <Button colorScheme="purple" onClick={fetchPost} maxW="lg">
             Salvar
           </Button>
         </Stack>

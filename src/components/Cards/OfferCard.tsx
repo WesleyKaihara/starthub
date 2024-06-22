@@ -39,10 +39,10 @@ const OfferCard: React.FC<OfferCardProps> = ({
       rounded="lg"
     >
       <Stack direction="column" spacing={5} textAlign="left" flexGrow={3}>
-        <chakra.h1 fontSize="4xl" lineHeight={1.2} fontWeight="bold">
+        <chakra.h1 fontSize={{ base: "2xl", md:"4xl"}} lineHeight={1.2} fontWeight="bold">
           {title}
         </chakra.h1>
-        <chakra.h1 fontSize="xl" lineHeight={1.2} fontWeight="bold">
+        <chakra.h1 fontSize={{ base: "md", md:"xl"}} lineHeight={1.2} fontWeight="bold" textAlign="justify">
           {subTitle}
         </chakra.h1>
         <List spacing={3}>

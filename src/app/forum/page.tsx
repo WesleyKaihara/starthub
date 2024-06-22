@@ -54,9 +54,8 @@ export default function Home() {
   const [activeModal, setActiveModal] = useState<number | null>(null);
   const [email, setEmail] = useState<string>("");
   const [discussions, setDiscussions] = useState<any[]>([]);
-  const [visibleDiscussions, setVisibleDiscussions] = useState<number>(3);
   const [page, setPage] = useState<number>(1);
-  const [limit] = useState<number>(10);
+  const [limit] = useState<number>(5);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleOpenModal = (modalId: number) => {
@@ -74,6 +73,8 @@ export default function Home() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Email submitted:", email);
+    setEmail("");
+    handleCloseModal();
   };
 
   const fetchInteractions = useCallback(async (page: number, limit: number) => {

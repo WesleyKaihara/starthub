@@ -46,7 +46,7 @@ const cardsData = [
 export default function Home() {
   return (
     <Container maxW="6xl">
-      <Box px={4}>
+      <Box px={2}>
         <Box textAlign="center" display={{ base: "none", md: "block" }}>
           <Heading
             as="h1"
@@ -98,9 +98,9 @@ export default function Home() {
           </Grid>
         </Box>
       </Box>
-      <Box px={4}>
+      <Box px={{ base: 0, md: 4}}>
         <Title>Nossos Serviços</Title>
-        <Box p={4}>
+        <Box>
           <Grid
             templateColumns={{
               base: "1fr",

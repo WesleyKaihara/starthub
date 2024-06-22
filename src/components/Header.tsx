@@ -38,7 +38,7 @@ const dropdownLinks = [
 ];
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleSignOut = () => {
@@ -162,6 +162,7 @@ export default function Navbar() {
         {isOpen ? (
           <Box pb={4} display={{ base: "inherit", md: "none" }}>
             <Stack as="nav" spacing={2}>
+              <NavLink name="Perfil" path="/perfil" onClose={onClose} />
               {navLinks.map((link, index) => (
                 <NavLink key={index} {...link} onClose={onClose} />
               ))}
