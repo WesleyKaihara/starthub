@@ -4,6 +4,7 @@ import HorizontalCard from "@/components/Cards/HorizontalCard";
 import OfferCard from "@/components/Cards/OfferCard";
 import PulseCards from "@/components/Loading/PulseCards";
 import Title from "@/components/Title";
+import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { DiscussionService } from "@/services/DiscussaoService";
 import { ProjectService } from "@/services/ProjectService";
 import {
@@ -29,7 +30,7 @@ type PageProps = {
 };
 
 export default function Startup({ params }: PageProps): ReactNode {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const [projeto, setProjeto] = useState<any>(null);
   const [discussions, setDiscussions] = useState<any>([]);
@@ -47,10 +48,13 @@ export default function Startup({ params }: PageProps): ReactNode {
   const [isEditing, setIsEditing] = useState(false);
   const toast = useToast();
 
+  const axiosAuth = useAxiosAuth();
+  const projectService = new ProjectService(axiosAuth);
+
   const fetchProjeto = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await ProjectService.buscarProjetoPorId(
+      const { data } = await projectService.buscarProjetoPorId(
         +params.projetoId
       );
       setProjeto(data);
@@ -74,9 +78,11 @@ export default function Startup({ params }: PageProps): ReactNode {
   }, [params.projetoId]);
 
   useEffect(() => {
-    fetchProjeto();
-    fetchDiscussions();
-  }, [fetchProjeto, fetchDiscussions]);
+    if (status === "authenticated") {
+      fetchProjeto();
+      fetchDiscussions();
+    }
+  }, [fetchProjeto, fetchDiscussions, status]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

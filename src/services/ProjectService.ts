@@ -11,8 +11,8 @@ export class ProjectService {
     return projetos;
   }
 
-  static buscarProjetoPorId(projetoId: number) {
-    return axios.get(`${API_HOST}/project/${projetoId}`);
+  buscarProjetoPorId(projetoId: number) {
+    return this.authAxios.get(`${API_HOST}/project/${projetoId}`);
   }
 
   buscarProjetosUsuario(usuarioId: number) {
