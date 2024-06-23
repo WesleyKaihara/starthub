@@ -54,9 +54,10 @@ export default function Home() {
   const [activeModal, setActiveModal] = useState<number | null>(null);
   const [email, setEmail] = useState<string>("");
   const [discussions, setDiscussions] = useState<any[]>([]);
+  const [hasNextPage, setHasNextPage] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [limit] = useState<number>(5);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleOpenModal = (modalId: number) => {
     setActiveModal(modalId);
@@ -81,7 +82,8 @@ export default function Home() {
     setLoading(true);
     try {
       const { data } = await DiscussionService.listarDiscussoes(page, limit);
-      setDiscussions((prevDiscussions) => [...prevDiscussions, ...data]);
+      setHasNextPage(data.hasNextPage);
+      setDiscussions((prevDiscussions) => [...prevDiscussions, ...data.itens]);
     } catch (error) {
       console.error("Erro ao buscar as interações da discussão:", error);
     } finally {
@@ -245,7 +247,7 @@ export default function Home() {
 
         {loading && <PulseCards />}
 
-        {discussions.length > 0 && !loading && (
+        {discussions.length > 0 && !loading && hasNextPage && (
           <button
             onClick={loadMoreDiscussions}
             className="bg-primary text-white font-bold py-2 px-4 rounded-full mt-4"

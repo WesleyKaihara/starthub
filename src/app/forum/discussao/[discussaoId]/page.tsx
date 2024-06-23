@@ -4,7 +4,7 @@ import { useEffect, useCallback, useState } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { DiscussionService } from "@/services/DiscussaoService";
 import Title from "@/components/Title";
-import { Container } from "@chakra-ui/react";
+import { Container, Textarea, Button, Box, Flex } from "@chakra-ui/react";
 import PulseCards from "@/components/Loading/PulseCards";
 import OfferCard from "@/components/Cards/OfferCard";
 
@@ -108,63 +108,77 @@ export default function Page({ params }: PageProps) {
         link="/ferramentas"
       />
       {discussao ? (
-        <div className="mt-10">
+        <Box mt={10}>
           <Title>{discussao.title}</Title>
-          <p>{discussao.context}</p>
-          <form
-            onSubmit={handleSubmit}
-            className="mt-4 flex flex-col sm:flex-row"
-          >
-            <input
-              type="text"
+          <p className="text-justify">{discussao.context}</p>
+          <form onSubmit={handleSubmit} className="mt-4">
+            <Textarea
               value={newInteraction}
               onChange={(e) => setNewInteraction(e.target.value)}
-              className="w-full border border-gray-300 rounded-t-md sm:rounded-t-none sm:rounded-l-md px-4 py-2 focus:outline-none focus:border-blue-500"
+              maxLength={750}
+              resize="none"
               placeholder="Adicione sua experiência e/ou opinião sobre o tema"
+              mb={2}
+              h={{ base: "300px", md: "150px"}}
             />
-            <button
-              type="submit"
-              className="bg-primary text-white px-4 py-2 rounded-b-md sm:rounded-b-none sm:rounded-r-md focus:outline-none whitespace-nowrap"
-            >
-              {session ? "Interagir" : "Faça login para interagir"}
-            </button>
+            <Flex justify="flex-end">
+              <Button
+                type="submit"
+                colorScheme="purple"
+                disabled={!session}
+                mr={2}
+              >
+                {session ? "Interagir" : "Faça login para interagir"}
+              </Button>
+            </Flex>
           </form>
           {validationError && (
             <p className="text-red-500 mt-1">{validationError}</p>
           )}
-          <div className="mt-4">
+          <Box mt={4}>
             {interactions
               .slice(0, visibleInteractions)
               .map((interaction: any) => (
-                <div
+                <Box
                   key={interaction.id}
-                  className="border border-gray-200 rounded-md p-4 mb-4 flex items-start"
+                  borderWidth="1px"
+                  borderRadius="md"
+                  p={4}
+                  mb={4}
+                  display="flex"
+                  alignItems="flex-start"
                 >
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center mr-2"
-                    style={{
-                      backgroundColor: getUserColor(interaction.user.id),
-                    }}
+                  <Box
+                    w="10"
+                    h="10"
+                    borderRadius="full"
+                    mr={2}
+                    bg={getUserColor(interaction.user.id)}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
                   >
-                    <span className="text-white">
+                    <Box color="white">
                       {interaction.user.name.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="flex-1">
+                    </Box>
+                  </Box>
+                  <Box flex="1">
                     <p>{interaction.message}</p>
-                  </div>
-                </div>
+                  </Box>
+                </Box>
               ))}
-          </div>
+          </Box>
           {visibleInteractions < interactions.length && (
-            <button
+            <Button
               onClick={loadMoreInteractions}
-              className="bg-primary text-white font-bold py-2 px-4 rounded-full mt-4"
+              colorScheme="purple"
+              fontWeight="bold"
+              mt={4}
             >
               Carregar Mais
-            </button>
+            </Button>
           )}
-        </div>
+        </Box>
       ) : (
         <PulseCards />
       )}
