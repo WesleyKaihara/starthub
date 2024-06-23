@@ -1,5 +1,4 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../app/api/auth/[...nextauth]";
 
 const BASE_URL = process.env.NEXT_PUBLIC_STARTHUB_API;
 
@@ -18,7 +17,7 @@ async function refreshToken(refreshToken: string) {
 }
 
 export async function AuthGetApi(url: string) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession();
   console.log("before: ", session?.user.accessToken);
 
   let res = await fetch(BASE_URL + url, {
@@ -29,7 +28,10 @@ export async function AuthGetApi(url: string) {
   });
 
   if (res.status == 401) {
-    if (session) session.user.accessToken = await refreshToken(session?.user.refreshToken ?? "");
+    if (session)
+      session.user.accessToken = await refreshToken(
+        session?.user.refreshToken ?? ""
+      );
     console.log("after: ", session?.user.accessToken);
 
     res = await fetch(BASE_URL + url, {
