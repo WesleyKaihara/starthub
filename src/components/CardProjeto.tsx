@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaCheckCircle, FaBan } from "react-icons/fa";
 import {
   Modal,
   ModalOverlay,
@@ -19,8 +19,9 @@ interface CardProps {
   buttonText: string;
   buttonOnClick: () => void;
   cardOnClick: () => void;
-  showDeleteButton?: boolean;
-  deleteButtonOnClick?: () => void;
+  showStatusChangeButton?: boolean;
+  statusChangeButtonOnClick?: () => void;
+  isActive?: boolean;
 }
 
 const CardProjeto: React.FC<CardProps> = ({
@@ -30,24 +31,31 @@ const CardProjeto: React.FC<CardProps> = ({
   buttonText,
   buttonOnClick,
   cardOnClick,
-  showDeleteButton = false,
-  deleteButtonOnClick,
+  showStatusChangeButton = false,
+  statusChangeButtonOnClick,
+  isActive = true,
 }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { onClose } = useDisclosure();
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const limitedDescription = description
     ? `${description.slice(0, 100)}...`
     : "";
 
-  const handleDeleteClick = (e: React.MouseEvent) => {
+  const handleStatusChangeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onOpen();
+    setIsConfirmationOpen(true);
   };
 
-  const handleConfirmDelete = () => {
-    if (deleteButtonOnClick) {
-      deleteButtonOnClick();
+  const handleConfirmStatusChange = () => {
+    if (statusChangeButtonOnClick) {
+      statusChangeButtonOnClick();
     }
+    setIsConfirmationOpen(false);
     onClose();
+  };
+
+  const handleCancelStatusChange = () => {
+    setIsConfirmationOpen(false);
   };
 
   return (
@@ -70,25 +78,35 @@ const CardProjeto: React.FC<CardProps> = ({
           >
             {buttonText}
           </button>
-          {showDeleteButton && (
-            <button className="text-red-600 ml-4" onClick={handleDeleteClick}>
-              <FaTrashAlt size={20} />
+          {showStatusChangeButton && (
+            <button onClick={handleStatusChangeClick} className='mx-4'>
+              {isActive ? (
+                <FaCheckCircle size={20} className="text-green-500" />
+              ) : (
+                <FaBan size={20} className="text-red-500" />
+              )}
             </button>
           )}
         </div>
       </div>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isConfirmationOpen} onClose={handleCancelStatusChange}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Confirmar Exclusão</ModalHeader>
+          <ModalHeader>Confirmar Alteração de Status</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>Tem certeza que deseja deletar este item?</ModalBody>
+          <ModalBody>
+            Tem certeza que deseja alterar o status deste projeto?
+          </ModalBody>
           <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={handleConfirmDelete}>
-              Deletar
+            <Button
+              colorScheme="green"
+              mr={3}
+              onClick={handleConfirmStatusChange}
+            >
+              Confirmar
             </Button>
-            <Button variant="ghost" onClick={onClose}>
+            <Button variant="ghost" onClick={handleCancelStatusChange}>
               Cancelar
             </Button>
           </ModalFooter>

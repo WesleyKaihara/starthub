@@ -14,8 +14,10 @@ import {
   Input,
   Textarea,
   useToast,
+  Box,
+  Text,
 } from "@chakra-ui/react";
-import { useSession } from 'next-auth/react';
+import { useSession } from "next-auth/react";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 
 type Params = {
@@ -33,7 +35,7 @@ export default function Startup({ params }: PageProps): ReactNode {
   const [discussions, setDiscussions] = useState<any>([]);
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const [visibleDiscussions, setVisibleDiscussions] = useState<number>(3);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [formData, setFormData] = useState({
     title: "",
     context: "",
@@ -46,14 +48,17 @@ export default function Startup({ params }: PageProps): ReactNode {
   const toast = useToast();
 
   const fetchProjeto = useCallback(async () => {
+    setLoading(true);
     try {
       const { data } = await ProjectService.buscarProjetoPorId(
         +params.projetoId
       );
       setProjeto(data);
       setEditData({ name: data.name, description: data.description });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao buscar o projeto:", error);
+    } finally {
+      setLoading(false);
     }
   }, [params.projetoId]);
 
@@ -156,6 +161,10 @@ export default function Startup({ params }: PageProps): ReactNode {
     } finally {
       setLoading(false);
     }
+  };
+
+  const redirectToStartups = () => {
+    window.location.href = "/startups";
   };
 
   return (
@@ -288,22 +297,20 @@ export default function Startup({ params }: PageProps): ReactNode {
 
             <Divider my={8} />
             <Flex direction="column" flexGrow={1}>
-              {loading ? (
-                <PulseCards />
-              ) : discussions.length > 0 ? (
-                discussions
-                  .slice(0, visibleDiscussions)
-                  .map((discussion: any) => (
-                    <HorizontalCard
-                      key={discussion.id}
-                      id={discussion.id}
-                      title={discussion.title}
-                      description={discussion.context}
-                      image="/logo-starthub.png"
-                      link={`/forum/discussao/${discussion.id}`}
-                    />
-                  ))
-              ) : null}
+              {discussions.length > 0
+                ? discussions
+                    .slice(0, visibleDiscussions)
+                    .map((discussion: any) => (
+                      <HorizontalCard
+                        key={discussion.id}
+                        id={discussion.id}
+                        title={discussion.title}
+                        description={discussion.context}
+                        image="/logo-starthub.png"
+                        link={`/forum/discussao/${discussion.id}`}
+                      />
+                    ))
+                : ""}
             </Flex>
 
             {visibleDiscussions < discussions.length && (
@@ -318,8 +325,25 @@ export default function Startup({ params }: PageProps): ReactNode {
             )}
           </section>
         </div>
-      ) : (
+      ) : loading ? (
         <PulseCards bigCard={true} />
+      ) : (
+        <Box p={8} textAlign="center">
+          <Text fontSize="2xl" fontWeight="bold" mb={4}>
+            Startup não encontrada
+          </Text>
+          <Text mb={6}>
+            A startup que você está procurando não foi encontrada.
+          </Text>
+          <Button
+            onClick={redirectToStartups}
+            bgGradient="linear(to-br, #735EF3, #998FF0)"
+            color="white"
+            _hover={{ bgGradient: "linear(to-br, #4432B0, #998FF0)" }}
+          >
+            Visualizar Startups
+          </Button>
+        </Box>
       )}
     </Container>
   );

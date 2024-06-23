@@ -3,6 +3,7 @@ export interface Projeto {
   name: string;
   description: string;
   image: string;
+  ative: boolean;
 }
 
 export interface UpdateProjetoBody {

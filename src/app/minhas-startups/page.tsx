@@ -9,6 +9,7 @@ import { ProjectService } from "@/services/ProjectService";
 import { useSession } from "next-auth/react";
 import CardProjeto from "@/components/CardProjeto";
 import PulseCards from "@/components/Loading/PulseCards";
+import useAxiosAuth from '@/lib/hooks/useAxiosAuth';
 
 export default function MinhasStartups() {
   const { data: session } = useSession({
@@ -18,15 +19,17 @@ export default function MinhasStartups() {
     },
   });
 
+  const axiosAuth = useAxiosAuth();
+  const projectService = new ProjectService(axiosAuth);
+
   const [projetos, setProjetos] = useState<Projeto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
   const toast = useToast();
-
+  
   const fetchProjects = useCallback(
     async (userId: number) => {
       try {
-        const { data } = await ProjectService.buscarProjetosUsuario(userId);
+        const { data } = await projectService.buscarProjetosUsuario(userId);
         setProjetos(data);
       } catch (error: any) {
         toast({
@@ -57,9 +60,26 @@ export default function MinhasStartups() {
     window.location.href = "/startups/cadastro";
   };
 
-  const handleDeleteButtonClick = async (projetoId: number) => {
-    await ProjectService.deletarProjeto(projetoId);
-    fetchProjects(Number(session?.user.id));
+  const handleStatusChangeButtonClick = async (projetoId: number) => {
+    try {
+      await projectService.alterarStatusProjeto(projetoId);
+      fetchProjects(Number(session?.user.id));
+      toast({
+        title: "Sucesso",
+        description: "Status do projeto alterado com sucesso.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Erro ao alterar status do projeto.",
+        description: "Por favor, tente novamente mais tarde.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -88,12 +108,13 @@ export default function MinhasStartups() {
                   imageSrc={projeto.image}
                   title={projeto.name}
                   description={projeto.description}
+                  isActive={projeto.ative}
                   buttonText="Mais detalhes"
                   buttonOnClick={() => handleButtonClick(projeto.id)}
                   cardOnClick={() => handleButtonClick(projeto.id)}
-                  showDeleteButton={true}
-                  deleteButtonOnClick={() =>
-                    handleDeleteButtonClick(projeto.id)
+                  showStatusChangeButton={true}
+                  statusChangeButtonOnClick={() =>
+                    handleStatusChangeButtonClick(projeto.id)
                   }
                 />
               ))
