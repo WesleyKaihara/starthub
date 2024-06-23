@@ -1,9 +1,5 @@
 "use client";
-import { useSession } from "next-auth/react";
-import { ReactNode, useCallback, useEffect, useState } from "react";
-import { redirect } from "next/navigation";
-import { ProjectService } from "@/services/ProjectService";
-import { Projeto } from "@/types/Projeto";
+import { ReactNode, useState } from "react";
 import { AnalysisService } from "@/services/AnalysisService";
 import {
   Box,
@@ -15,11 +11,12 @@ import {
   FormLabel,
   Heading,
   Progress,
-  Select,
+  Spinner,
   Text,
   Textarea,
   VStack,
 } from "@chakra-ui/react";
+import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 
 interface NameSuggestion {
   name: string;
@@ -37,13 +34,6 @@ export default function Page(): ReactNode {
   const [loading, setLoading] = useState<boolean>(false);
   const [nameSuggestions, setNameSuggestions] = useState<NameSuggestion[]>([]);
   const [currentStep, setCurrentStep] = useState<number>(1);
-
-  const { data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-      redirect("/login?callbackUrl=/ferramentas/gerar-nomes");
-    },
-  });
 
   const [error, setError] = useState<string>("");
 
@@ -81,7 +71,7 @@ export default function Page(): ReactNode {
 
   return (
     <Container maxW="6xl" px={{ base: 6 }} py={10}>
-      <Flex direction="column" align="center" minH="100vh" w="full" p={4}>
+      <Flex direction="column" align="center" minH="100vh" w="full">
         <Box w="full" mx="auto" mb={4}>
           <Box pt={1}>
             <Flex mb={2} alignItems="center" justifyContent="space-between">
@@ -134,7 +124,7 @@ export default function Page(): ReactNode {
           {currentStep === 1 && (
             <Box textAlign="center">
               <Heading as="h2" size="lg" mb={4}>
-              Bem-vindo ao nosso serviço de sugestões de nomes
+                Bem-vindo ao nosso serviço de sugestões de nomes
               </Heading>
               <Text color="gray.700" mb={6}>
                 Para começar, clique no botão abaixo e siga as instruções.
@@ -167,9 +157,10 @@ export default function Page(): ReactNode {
                   type="submit"
                   colorScheme="purple"
                   isLoading={loading}
+                  w={{ base: "full", md: "md" }}
                   isDisabled={loading || selectedProject.trim().length < 50}
                 >
-                  {loading ? "Processando..." : "Enviar"}
+                  {loading ? <Spinner /> : "Enviar"}
                 </Button>
               </VStack>
             </form>
@@ -179,7 +170,7 @@ export default function Page(): ReactNode {
               <Heading as="h2" size="xl" my={4}>
                 Sugestões para ferramentas
               </Heading>
-              <Text color="gray.700" mb={6} mx={6} textAlign="justify">
+              <Text color="gray.700" mb={6} textAlign="justify">
                 {selectedProject}
               </Text>
               {nameSuggestions.map((name, index) => (
@@ -201,8 +192,17 @@ export default function Page(): ReactNode {
                   </Text>
                 </Box>
               ))}
-              <Flex mt={6} justifyContent="space-between" width="full">
-                <Button colorScheme="purple" onClick={handleRestart}>
+              <Flex
+                mt={6}
+                flexDirection={{ base: "column", md: "row" }}
+                justifyContent={{ base: "center", md: "space-between" }}
+                width="full"
+              >
+                <Button
+                  colorScheme="purple"
+                  mb={{ base: 4, md: 0 }}
+                  onClick={handleRestart}
+                >
                   Iniciar novamente
                 </Button>
                 <Button

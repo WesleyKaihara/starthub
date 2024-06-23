@@ -23,7 +23,9 @@ import {
   AlertDescription,
   Divider,
   Flex,
+  Spinner,
 } from "@chakra-ui/react";
+import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 
 interface TopicoRelevante {
   title: string;
@@ -45,7 +47,10 @@ export default function Page(): ReactNode {
   );
   const [currentStep, setCurrentStep] = useState<number>(1);
 
-  const { data: session } = useSession({
+  const axiosAuth = useAxiosAuth();
+  const projectService = new ProjectService(axiosAuth);
+
+  const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
       redirect("/login?callbackUrl=/ferramentas/gerar-nomes");
@@ -54,7 +59,7 @@ export default function Page(): ReactNode {
 
   const fetchProjects = useCallback(async (userId: number) => {
     try {
-      const { data } = await ProjectService.buscarProjetosUsuario(
+      const { data } = await projectService.buscarProjetosUsuario(
         Number(userId)
       );
       setProjetos(data);
@@ -64,10 +69,10 @@ export default function Page(): ReactNode {
   }, []);
 
   useEffect(() => {
-    if (session?.user.id) {
+    if (status === "authenticated") {
       fetchProjects(Number(session?.user.id));
     }
-  }, [fetchProjects, session?.user.id]);
+  }, [fetchProjects]);
 
   const handleSelectProject = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedProject(event.target.value);
@@ -151,7 +156,12 @@ export default function Page(): ReactNode {
       >
         {![1, 3].includes(currentStep) && (
           <>
-            <Heading as="h1" size="lg" my={4} textAlign={{ base: "center" }}>
+            <Heading
+              as="h1"
+              size={{ base: "md", md: "lg" }}
+              my={4}
+              textAlign={{ base: "justify", md: "center" }}
+            >
               Serviço de Sugestões para Rentabilizar Projetos
             </Heading>
             <Text color="gray.700" mb={6} textAlign="justify">
@@ -183,22 +193,24 @@ export default function Page(): ReactNode {
         {currentStep === 2 && (
           <form onSubmit={handleSubmit} style={{ width: "100%" }}>
             <VStack spacing={4}>
-              <FormControl>
-                <FormLabel htmlFor="select">
-                  Selecione uma opção (opcional):
-                </FormLabel>
-                <Select
-                  id="select"
-                  placeholder="Selecionar projeto existente"
-                  onChange={handleSelectProject}
-                >
-                  {projetos.map((projeto) => (
-                    <option key={projeto.id} value={projeto.description}>
-                      {projeto.name}
-                    </option>
-                  ))}
-                </Select>
-              </FormControl>
+              {projetos.length > 0 && (
+                <FormControl>
+                  <FormLabel htmlFor="select">
+                    Selecione uma opção (opcional):
+                  </FormLabel>
+                  <Select
+                    id="select"
+                    placeholder="Selecionar projeto existente"
+                    onChange={handleSelectProject}
+                  >
+                    {projetos.map((projeto) => (
+                      <option key={projeto.id} value={projeto.description}>
+                        {projeto.name}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
 
               <FormControl>
                 <FormLabel htmlFor="message">Descrição do projeto:</FormLabel>
@@ -220,12 +232,13 @@ export default function Page(): ReactNode {
               )}
 
               <Button
+                type="submit"
                 colorScheme="purple"
                 isLoading={loading}
-                type="submit"
-                isDisabled={loading || selectedProject.trim().length < 15}
+                w={{ base: "full", md: "md" }}
+                isDisabled={loading || selectedProject.trim().length < 50}
               >
-                {loading ? "Processando..." : "Enviar"}
+                {loading ? <Spinner /> : "Enviar"}
               </Button>
             </VStack>
           </form>
@@ -236,7 +249,7 @@ export default function Page(): ReactNode {
             <Heading as="h2" size="xl" my={4}>
               Dados relevantes e tópicos para pesquisas
             </Heading>
-            <Text color="gray.700" mb={6} mx={2} textAlign="justify">
+            <Text color="gray.700" mb={6} textAlign="justify">
               {selectedProject}
             </Text>
             {topicosRelevantes.map((topico, index) => (
@@ -258,8 +271,17 @@ export default function Page(): ReactNode {
                 </Text>
               </Box>
             ))}
-            <Flex mt={6} justifyContent="space-between" width="full">
-              <Button colorScheme="purple" onClick={handleRestart}>
+            <Flex
+              mt={6}
+              flexDirection={{ base: "column", md: "row" }}
+              justifyContent={{ base: "center", md: "space-between" }}
+              width="full"
+            >
+              <Button
+                colorScheme="purple"
+                mb={{ base: 4, md: 0 }}
+                onClick={handleRestart}
+              >
                 Iniciar novamente
               </Button>
               <Button

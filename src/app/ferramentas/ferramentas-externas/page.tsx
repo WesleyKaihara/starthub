@@ -16,10 +16,12 @@ import {
   Heading,
   Progress,
   Select,
+  Spinner,
   Text,
   Textarea,
   VStack,
 } from "@chakra-ui/react";
+import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 
 interface Ferramentas {
   name: string;
@@ -39,6 +41,9 @@ export default function Page(): ReactNode {
   const [ferramentas, setFerramentas] = useState<Ferramentas[]>([]);
   const [currentStep, setCurrentStep] = useState<number>(1);
 
+  const axiosAuth = useAxiosAuth();
+  const projectService = new ProjectService(axiosAuth);
+
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
@@ -46,16 +51,19 @@ export default function Page(): ReactNode {
     },
   });
 
-  const fetchProjects = useCallback(async (userId: number) => {
-    try {
-      const { data } = await ProjectService.buscarProjetosUsuario(
-        Number(userId)
-      );
-      setProjetos(data);
-    } catch (error) {
-      console.error("Erro ao buscar projetos do usuário:", error);
-    }
-  }, []);
+  const fetchProjects = useCallback(
+    async (userId: number) => {
+      try {
+        const { data } = await projectService.buscarProjetosUsuario(
+          Number(userId)
+        );
+        setProjetos(data);
+      } catch (error) {
+        console.error("Erro ao buscar projetos do usuário:", error);
+      }
+    },
+    [projectService]
+  );
 
   useEffect(() => {
     if (session?.user.id) {
@@ -103,7 +111,7 @@ export default function Page(): ReactNode {
 
   return (
     <Container maxW="6xl" px={{ base: 6 }} py={10}>
-      <Flex direction="column" align="center" minH="100vh" w="full" p={4}>
+      <Flex direction="column" align="center" minH="100vh" w="full">
         <Box w="full" mx="auto" mb={4}>
           <Box pt={1}>
             <Flex mb={2} alignItems="center" justifyContent="space-between">
@@ -171,20 +179,24 @@ export default function Page(): ReactNode {
           {currentStep === 2 && (
             <form onSubmit={handleSubmit} style={{ width: "100%" }}>
               <VStack spacing={4}>
-                <FormControl>
-                  <FormLabel>Selecione um projeto (opcional):</FormLabel>
-                  <Select
-                    onChange={handleSelectProject}
-                    value={selectedProject}
-                    placeholder="Selecione um projeto existente"
-                  >
-                    {projetos.map((projeto) => (
-                      <option key={projeto.id} value={projeto.description}>
-                        {projeto.name}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
+                {projetos.length > 0 && (
+                  <FormControl>
+                    <FormLabel htmlFor="select">
+                      Selecione uma opção (opcional):
+                    </FormLabel>
+                    <Select
+                      id="select"
+                      placeholder="Selecionar projeto existente"
+                      onChange={handleSelectProject}
+                    >
+                      {projetos.map((projeto) => (
+                        <option key={projeto.id} value={projeto.description}>
+                          {projeto.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
                 <FormControl isRequired>
                   <FormLabel>
                     Descrição do projeto (mínimo 50 caracteres):
@@ -204,9 +216,10 @@ export default function Page(): ReactNode {
                   type="submit"
                   colorScheme="purple"
                   isLoading={loading}
+                  w={{ base: "full", md: "md" }}
                   isDisabled={loading || selectedProject.trim().length < 50}
                 >
-                  {loading ? "Processando..." : "Enviar"}
+                  {loading ? <Spinner /> : "Enviar"}
                 </Button>
               </VStack>
             </form>
@@ -216,7 +229,7 @@ export default function Page(): ReactNode {
               <Heading as="h2" size="xl" my={4}>
                 Sugestões para ferramentas
               </Heading>
-              <Text color="gray.700" mb={6} mx={6} textAlign="justify">
+              <Text color="gray.700" mb={6} textAlign="justify">
                 {selectedProject}
               </Text>
               {ferramentas.map((ferramenta, index) => (
@@ -238,8 +251,17 @@ export default function Page(): ReactNode {
                   </Text>
                 </Box>
               ))}
-              <Flex mt={6} justifyContent="space-between" width="full">
-                <Button colorScheme="purple" onClick={handleRestart}>
+              <Flex
+                mt={6}
+                flexDirection={{ base: "column", md: "row" }}
+                justifyContent={{ base: "center", md: "space-between" }}
+                width="full"
+              >
+                <Button
+                  colorScheme="purple"
+                  mb={{ base: 4, md: 0 }}
+                  onClick={handleRestart}
+                >
                   Iniciar novamente
                 </Button>
                 <Button
